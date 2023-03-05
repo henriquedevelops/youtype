@@ -33,7 +33,7 @@ const Home: Page = () => {
   return (
     <Box>
       {currentSession?.user?.username ? (
-        <Chat />
+        <Chat currentSession={currentSession} />
       ) : (
         <Login currentSession={currentSession} reloadSession={reloadSession} />
       )}
