@@ -17,6 +17,7 @@ to start a new conversation.
 interface ListOfChatsProps {}
 
 const ListOfChats: FC<ListOfChatsProps> = () => {
+  // This modal refers to the "ModalStartNewConv" component
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleOpenCloseModal = () => {
