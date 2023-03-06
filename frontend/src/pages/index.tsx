@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import type { NextPage as Page, NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
-import Chat from "../components/chat";
+import EntireChat from "../components/chat/EntireChat";
 import Login from "../components/login";
 
 // Server-side rendering
@@ -27,13 +27,12 @@ const Home: Page = () => {
     const event = new Event("visibilitychange");
     document.dispatchEvent(event);
   };
-  console.log(currentSession);
 
   // If user is logged in send him to chat, if not, send him to login
   return (
     <Box>
       {currentSession?.user?.username ? (
-        <Chat currentSession={currentSession} />
+        <EntireChat currentSession={currentSession} />
       ) : (
         <Login currentSession={currentSession} reloadSession={reloadSession} />
       )}

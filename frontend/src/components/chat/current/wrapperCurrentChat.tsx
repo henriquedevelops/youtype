@@ -3,16 +3,14 @@ import { FunctionComponent as FC } from "react";
 import { Button, Center, Flex } from "@chakra-ui/react";
 import { Session } from "next-auth";
 
-interface wrapperCurrentChatProps {
-  currentSession: Session;
-}
+interface wrapperCurrentChatProps {}
+
 /* 
 This wrapper component contains some core logic that can
 be reused in its child components
 */
-const WrapperCurrentChat: FC<wrapperCurrentChatProps> = ({
-  currentSession,
-}) => {
+
+const WrapperCurrentChat: FC<wrapperCurrentChatProps> = () => {
   return <div>fda</div>;
 };
 

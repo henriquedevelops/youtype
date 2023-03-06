@@ -26,7 +26,6 @@ const Login: FC<LoginProps> = ({ currentSession, reloadSession }) => {
     try {
       // Triggering saveUsername mutation
       const { data } = await saveUsername({ variables: { inputUsername } });
-      console.log(data);
 
       // Error handling
       if (!data?.saveUsernameMutation) {

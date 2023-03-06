@@ -32,7 +32,6 @@ const userResolvers = {
         });
         return { success: true };
       } catch (error: any) {
-        console.log("error on saving username", error);
         return {
           error: error?.message,
         };

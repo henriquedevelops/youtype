@@ -1,7 +1,7 @@
 import { signOut } from "next-auth/react";
 import { FunctionComponent as FC } from "react";
 import { Button, Center, Flex } from "@chakra-ui/react";
-import WrapperChatsList from "./list/wrapperChatsList";
+import WrapperListOfChats from "./list/WrapperListOfChats";
 import WrapperCurrentChat from "./current/wrapperCurrentChat";
 import { Session } from "next-auth";
 
@@ -11,18 +11,17 @@ interface ChatProps {
 
 /* 
 Component that contains the entire chat.
-(for when user is already successfully logged in)
+(Rendered when user is logged in)
 */
 
-const Chat: FC<ChatProps> = ({ currentSession }) => {
+const EntireChat: FC<ChatProps> = () => {
   return (
     <Flex height="100vh">
-      CHAT
+      <WrapperListOfChats />
+      <WrapperCurrentChat />
       <Button onClick={() => signOut()}>Logout</Button>
-      <WrapperChatsList currentSession={currentSession} />
-      <WrapperCurrentChat currentSession={currentSession} />
     </Flex>
   );
 };
 
-export default Chat;
+export default EntireChat;
