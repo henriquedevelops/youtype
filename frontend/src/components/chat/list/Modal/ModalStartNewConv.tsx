@@ -14,16 +14,30 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { Session } from "next-auth";
-
-interface ModalStartNewConvProps {
-  modalIsOpen: boolean;
-  handleOpenCloseModal: () => void;
-}
+import userOperations from "../../../../graphql/operations/user";
+import { useLazyQuery, useQuery } from "@apollo/client";
 
 /* 
 This modal is opened when the user clicks on the button 
 "Start a conversation" at the ListOfChats component. 
 */
+
+// Structure of this modal component props
+interface ModalStartNewConvProps {
+  modalIsOpen: boolean;
+  handleOpenCloseModal: () => void;
+}
+
+// Structure of the argument that is passed to the "triggerSearchUsersQuery" function
+interface SearchUsersInput {
+  targetUsername: string;
+}
+
+// Structure of the data that is returned by the "triggerSearchUsersQuery" function
+interface SearchUsersResult {
+  searchUsersResult: Array<{ id: string; username: string }>;
+}
+
 const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
   modalIsOpen,
   handleOpenCloseModal,
@@ -35,8 +49,22 @@ const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
   */
   const [targetUsername, setTargetUsername] = useState("");
 
-  // Returns a list of users that username matches the target
-  const handleSearch = async (event: FormEvent) => {};
+  const [triggerSearchUsersQuery, { data, loading, error }] = useLazyQuery<
+    SearchUsersResult,
+    SearchUsersInput
+  >(userOperations.Queries.searchUsersByUsername);
+
+  console.log("result of the search12:", data);
+
+  /* Returns a list of users that username matches the
+   targetUsername */
+  const handleSearch = async (event: FormEvent) => {
+    event.preventDefault();
+
+    await triggerSearchUsersQuery({
+      variables: { targetUsername },
+    });
+  };
   return (
     <>
       <Modal isOpen={modalIsOpen} onClose={handleOpenCloseModal}>
@@ -52,7 +80,11 @@ const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
                   value={targetUsername}
                   onChange={(event) => setTargetUsername(event.target.value)}
                 />
-                <Button type="submit" disabled={!targetUsername}>
+                <Button
+                  type="submit"
+                  disabled={!targetUsername}
+                  isLoading={loading}
+                >
                   Search
                 </Button>
               </Stack>

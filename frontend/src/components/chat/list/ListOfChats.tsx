@@ -22,7 +22,6 @@ const ListOfChats: FC<ListOfChatsProps> = () => {
 
   const handleOpenCloseModal = () => {
     modalIsOpen ? setModalIsOpen(false) : setModalIsOpen(true);
-    console.log(modalIsOpen);
   };
   return (
     <>

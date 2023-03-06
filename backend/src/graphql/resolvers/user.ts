@@ -1,8 +1,39 @@
+import { ApolloError } from "apollo-server-core";
+import { User } from "@prisma/client";
 import { SaveUsernameResponse, GraphQLContext } from "../../util/types";
 
 const userResolvers = {
   Query: {
-    searchUsers: () => {},
+    searchUsersByUsername: async (
+      _: any,
+      // Receiving new username from input
+      { targetUsername }: { targetUsername: string },
+
+      // Receving current session data and prisma client from context
+      { currentSession, prisma }: GraphQLContext
+    ): Promise<Array<User>> => {
+      // Authentication
+      if (!currentSession?.user) throw new ApolloError("Not logged in");
+      try {
+        const searchResult = await prisma.user.findMany({
+          where: {
+            username: {
+              contains: targetUsername,
+
+              // Excluding currently authenticated user from the search
+              not: currentSession.user.username,
+
+              // Disabling case senstitive option
+              mode: "insensitive",
+            },
+          },
+        });
+
+        return searchResult;
+      } catch (error: any) {
+        throw new ApolloError(error?.message);
+      }
+    },
   },
   Mutation: {
     saveUsernameMutation: async (
@@ -13,15 +44,15 @@ const userResolvers = {
       // Receving current session data and prisma client from context
       { currentSession, prisma }: GraphQLContext
     ): Promise<SaveUsernameResponse> => {
-      // Checking user logged in
-
-      if (!currentSession?.user) return { error: "Not logged in" };
+      // Authentication
+      if (!currentSession?.user) throw new ApolloError("Not logged in.");
       try {
         // Checking if username is not already taken by another user
         const alreadyExistingUser = await prisma.user.findUnique({
           where: { username: inputUsername },
         });
-        if (alreadyExistingUser) return { error: "Username already taken." };
+        if (alreadyExistingUser)
+          throw new ApolloError("Username not available.");
 
         // Finally saving new username in database
         await prisma.user.update({

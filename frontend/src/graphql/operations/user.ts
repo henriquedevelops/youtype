@@ -5,7 +5,17 @@ a synthax that can be used by the Apollo client to send the
 mutation to the GraphQL server. */
 
 export default {
-  Queries: {},
+  Queries: {
+    searchUsersByUsername: gql`
+      query ($targetUsername: String!) {
+        searchUsersByUsername(targetUsername: $targetUsername) {
+          id
+          username
+        }
+      }
+    `,
+  },
+
   Mutations: {
     /* saveUsername mutation takes a single argument, 
     "inputUsername", which is of type "String!". The mutation 
