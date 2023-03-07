@@ -1,8 +1,8 @@
 import { signOut } from "next-auth/react";
 import { FunctionComponent as FC } from "react";
 import { Button, Center, Flex } from "@chakra-ui/react";
-import WrapperListOfChats from "./list/WrapperListOfChats";
-import WrapperCurrentChat from "./current/wrapperCurrentChat";
+import WrapAllConversations from "./Conversations/WrapAllConversations";
+import WrapCurrentConversation from "./currentConversation/WrapCurrentConversation";
 import { Session } from "next-auth";
 
 interface ChatProps {
@@ -17,8 +17,8 @@ Component that contains the entire chat.
 const EntireChat: FC<ChatProps> = () => {
   return (
     <Flex height="100vh">
-      <WrapperListOfChats />
-      <WrapperCurrentChat />
+      <WrapAllConversations />
+      <WrapCurrentConversation />
       <Button onClick={() => signOut()}>Logout</Button>
     </Flex>
   );

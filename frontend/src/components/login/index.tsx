@@ -3,31 +3,34 @@ import { FunctionComponent as FC, useState } from "react";
 import { Button, Center, Stack, Text, Image, Input } from "@chakra-ui/react";
 import { useMutation } from "@apollo/client";
 import userOperations from "../../graphql/operations/user";
-import {
-  argumentSaveUsername,
-  DataSaveUsername,
-  LoginProps,
-} from "@/src/util/types";
+import { argumentSaveUsername, DataSaveUsername } from "@/src/util/types";
 import toast from "react-hot-toast";
+import { Session } from "next-auth";
 
-// Component that contains the login functionality
+/* Structure of the component props */
+export interface LoginProps {
+  currentSession: Session | null;
+  reloadSession: () => void;
+}
+
+/* Component that contains the login functionality */
 const Login: FC<LoginProps> = ({ currentSession, reloadSession }) => {
   const [inputUsername, setInputUsername] = useState("");
 
-  // Creating the function that triggers the username mutation
+  /* Creating the function that triggers the username mutation */
   const [saveUsername, { loading, error }] = useMutation<
     DataSaveUsername,
     argumentSaveUsername
   >(userOperations.Mutations.saveUsernameGQL);
 
-  // Handler for "onClick" in the save username button
+  /* Handler for "onClick" in the save username button */
   const handleSaveUsername = async () => {
     if (!inputUsername) return;
     try {
-      // Triggering saveUsername mutation
+      /* Triggering saveUsername mutation */
       const { data } = await saveUsername({ variables: { inputUsername } });
 
-      // Error handling
+      /* Error handling */
       if (!data?.saveUsernameMutation) {
         throw new Error();
       }
@@ -39,7 +42,7 @@ const Login: FC<LoginProps> = ({ currentSession, reloadSession }) => {
       }
       toast.success("Username succesfully saved ✔");
 
-      // Automatically refetching the session
+      /* Automatically refetching the session */
       reloadSession();
     } catch (error: any) {
       toast.error(error?.message);

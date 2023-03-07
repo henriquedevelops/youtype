@@ -2,8 +2,8 @@ import { signOut } from "next-auth/react";
 import { FunctionComponent as FC, useState } from "react";
 import { Box, Button, Center, Flex, Text } from "@chakra-ui/react";
 import { Session } from "next-auth";
-import StartConversationModal from "./Modal/ModalStartNewConv";
-import ModalStartNewConv from "./Modal/ModalStartNewConv";
+import StartConversationModal from "./SearchUsers/ModalSearchUsers";
+import ModalSearchUsers from "./SearchUsers/ModalSearchUsers";
 
 /* 
 This component contains the list of chats from the 
@@ -14,10 +14,10 @@ It also contains a button that when clicked opens a modal
 to start a new conversation.
 */
 
-interface ListOfChatsProps {}
+interface AllConversationsProps {}
 
-const ListOfChats: FC<ListOfChatsProps> = () => {
-  // This modal refers to the "ModalStartNewConv" component
+const AllConversations: FC<AllConversationsProps> = () => {
+  // This modal refers to the "ModalSearchUsers" component
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleOpenCloseModal = () => {
@@ -29,13 +29,13 @@ const ListOfChats: FC<ListOfChatsProps> = () => {
         Start new conversation
       </Button>
       {modalIsOpen ? (
-        <ModalStartNewConv
+        <ModalSearchUsers
           modalIsOpen={modalIsOpen}
           handleOpenCloseModal={handleOpenCloseModal}
-        ></ModalStartNewConv>
+        ></ModalSearchUsers>
       ) : null}
     </>
   );
 };
 
-export default ListOfChats;
+export default AllConversations;

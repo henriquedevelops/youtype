@@ -1,18 +1,23 @@
+import { UserFound } from "@/src/util/types";
 import { Avatar, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { FunctionComponent as FC } from "react";
 
-interface ListResultSearchProps {
+interface SearchResultsProps {
   searchUsersResult: Array<{
     id: string;
     username: string;
   }>;
+  handleSelectUser: (selectedUser: UserFound) => void;
 }
 
 /* 
 This component is the list of users rendered on the 
-"modalStartNewConv as the result for the search
+"modalStartNewConv" as the result for the search
   */
-const ListResultSearch: FC<ListResultSearchProps> = ({ searchUsersResult }) => {
+const SearchResults: FC<SearchResultsProps> = ({
+  searchUsersResult,
+  handleSelectUser,
+}) => {
   return (
     <>
       {searchUsersResult.length === 0 ? (
@@ -38,7 +43,7 @@ const ListResultSearch: FC<ListResultSearchProps> = ({ searchUsersResult }) => {
                 <Button
                   bg="brand.100"
                   _hover={{ bg: "brand.100" }}
-                  /* onClick={() => addParticipant(user)} */
+                  onClick={() => handleSelectUser(user)}
                 >
                   Select
                 </Button>
@@ -51,4 +56,4 @@ const ListResultSearch: FC<ListResultSearchProps> = ({ searchUsersResult }) => {
   );
 };
 
-export default ListResultSearch;
+export default SearchResults;
