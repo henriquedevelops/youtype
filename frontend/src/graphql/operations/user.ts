@@ -6,6 +6,9 @@ mutation to the GraphQL server. */
 
 export default {
   Queries: {
+    /* This operation triggers the query called (SearchUsers). 
+    It takes the target username as the only argument and it
+    returns an array of users found. */
     searchUsers: gql`
       query ($targetUsername: String!) {
         searchUsers(targetUsername: $targetUsername) {
@@ -21,7 +24,7 @@ export default {
     "inputUsername", which is of type "String!". The mutation 
     returns an object with two fields: "success" and "error". */
     saveUsernameGQL: gql`
-      mutation SaveUsernameMutation($inputUsername: String!) {
+      mutation ($inputUsername: String!) {
         saveUsernameMutation(inputUsername: $inputUsername) {
           success
           error

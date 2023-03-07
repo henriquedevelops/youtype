@@ -10,9 +10,9 @@ import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
 import * as dotenv from "dotenv";
 import { getSession } from "next-auth/react";
-import { GraphQLContext } from "../util/types";
+import { GraphQLContext } from "../typescriptTypes/user";
 import { PrismaClient } from "@prisma/client";
-import { Session } from "../util/types";
+import { Session } from "../typescriptTypes/user";
 
 async function startApolloServer() {
   dotenv.config();
