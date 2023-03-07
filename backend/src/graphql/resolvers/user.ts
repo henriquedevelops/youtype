@@ -4,7 +4,7 @@ import { SaveUsernameResponse, GraphQLContext } from "../../util/types";
 
 const userResolvers = {
   Query: {
-    searchUsersByUsername: async (
+    searchUsers: async (
       _: any,
       // Receiving new username from input
       { targetUsername }: { targetUsername: string },

@@ -6,9 +6,9 @@ mutation to the GraphQL server. */
 
 export default {
   Queries: {
-    searchUsersByUsername: gql`
+    searchUsers: gql`
       query ($targetUsername: String!) {
-        searchUsersByUsername(targetUsername: $targetUsername) {
+        searchUsers(targetUsername: $targetUsername) {
           id
           username
         }

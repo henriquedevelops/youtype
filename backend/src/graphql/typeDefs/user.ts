@@ -7,7 +7,7 @@ const userTypeDefs = gql`
   }
 
   type Query {
-    searchUsersByUsername(targetUsername: String): [UserSearchResult]
+    searchUsers(targetUsername: String): [UserSearchResult]
   }
 
   type SaveUsernameResponse {

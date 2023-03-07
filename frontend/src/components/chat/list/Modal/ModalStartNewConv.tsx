@@ -16,6 +16,7 @@ import {
 import { Session } from "next-auth";
 import userOperations from "../../../../graphql/operations/user";
 import { useLazyQuery, useQuery } from "@apollo/client";
+import ListResultSearch from "./ListResultSearch";
 
 /* 
 This modal is opened when the user clicks on the button 
@@ -35,7 +36,10 @@ interface SearchUsersInput {
 
 // Structure of the data that is returned by the "triggerSearchUsersQuery" function
 interface SearchUsersResult {
-  searchUsersResult: Array<{ id: string; username: string }>;
+  searchUsers: Array<{
+    id: string;
+    username: string;
+  }>;
 }
 
 const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
@@ -52,9 +56,7 @@ const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
   const [triggerSearchUsersQuery, { data, loading, error }] = useLazyQuery<
     SearchUsersResult,
     SearchUsersInput
-  >(userOperations.Queries.searchUsersByUsername);
-
-  console.log("result of the search12:", data);
+  >(userOperations.Queries.searchUsers);
 
   /* Returns a list of users that username matches the
    targetUsername */
@@ -65,6 +67,8 @@ const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
       variables: { targetUsername },
     });
   };
+  console.log(data?.searchUsers);
+
   return (
     <>
       <Modal isOpen={modalIsOpen} onClose={handleOpenCloseModal}>
@@ -89,6 +93,9 @@ const ModalStartNewConv: FC<ModalStartNewConvProps> = ({
                 </Button>
               </Stack>
             </form>
+            {data?.searchUsers && (
+              <ListResultSearch searchUsersResult={data.searchUsers} />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
