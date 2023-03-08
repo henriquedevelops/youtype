@@ -38,8 +38,11 @@ const userResolvers = {
     },
   },
   Mutation: {
+    /* This mutation is triggered when the user logs in for the first
+    time and creates a username */
     saveUsernameMutation: async (
       _: any,
+
       /* Receiving new username from input */
       { inputUsername }: { inputUsername: string },
 
@@ -56,13 +59,15 @@ const userResolvers = {
         if (alreadyExistingUser)
           throw new ApolloError("Username not available.");
 
-        /* Finally saving new username in database */
+        /* Saving new username in database */
         await prisma.user.update({
           where: { id: currentSession.user.id },
           data: {
             username: inputUsername,
           },
         });
+
+        /* Sending success response to the user */
         return { success: true };
       } catch (error: any) {
         return {

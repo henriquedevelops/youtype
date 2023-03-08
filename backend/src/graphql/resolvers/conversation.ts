@@ -57,6 +57,7 @@ const resolvers = {
           },
         });
 
+        /* Send new conversation id to the client */
         return { newConversationId: newConversation.id };
       } catch (error) {
         console.log(error);

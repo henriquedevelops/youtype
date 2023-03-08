@@ -1,7 +1,6 @@
-import { signOut } from "next-auth/react";
+import { Flex } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { FunctionComponent as FC } from "react";
-import { Button, Center, Flex } from "@chakra-ui/react";
-import { Session } from "next-auth";
 
 interface WrapCurrentConversationProps {}
 
@@ -11,7 +10,24 @@ be reused in its child components
 */
 
 const WrapCurrentConversation: FC<WrapCurrentConversationProps> = () => {
-  return <div>fda</div>;
+  /* Extracting current conversation id */
+  const nextRouter = useRouter();
+  const { conversationId: currentConversationId } = nextRouter.query;
+
+  return (
+    <Flex
+      display={{ base: currentConversationId ? "flex" : "none" }}
+      width="100%"
+      direction="column"
+      border="1px solid red"
+    >
+      {currentConversationId ? (
+        <Flex>Current chat</Flex>
+      ) : (
+        <Flex>Nextype Messenger</Flex>
+      )}
+    </Flex>
+  );
 };
 
 export default WrapCurrentConversation;

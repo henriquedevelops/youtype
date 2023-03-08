@@ -2,7 +2,7 @@
 createConversationMutation. */
 export interface CreateConversationData {
   createConversation: {
-    conversationId: string;
+    newConversationId: string;
   };
 }
 

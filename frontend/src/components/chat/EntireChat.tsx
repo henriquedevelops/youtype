@@ -19,7 +19,7 @@ const EntireChat: FC<ChatProps> = () => {
     <Flex height="100vh">
       <WrapAllConversations />
       <WrapCurrentConversation />
-      <Button onClick={() => signOut()}>Logout</Button>
+      {/* <Button onClick={() => signOut()}>Logout</Button> */}
     </Flex>
   );
 };

@@ -1,4 +1,4 @@
-import { UserFound } from "@/src/util/types";
+import { UserFound } from "@/src/typescriptTypes/users";
 import { CloseIcon } from "@chakra-ui/icons";
 import { Flex, Stack, Text } from "@chakra-ui/react";
 import { FunctionComponent as FC } from "react";

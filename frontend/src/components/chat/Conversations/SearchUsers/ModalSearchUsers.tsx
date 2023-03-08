@@ -1,4 +1,4 @@
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
 import {
   Button,
   Input,
@@ -27,9 +27,10 @@ import {
   SearchUsersResult,
   UserFound,
 } from "@/src/typescriptTypes/users";
+import { useRouter } from "next/router";
 
 /* 
-This modal is opened when the user clicks on the button 
+This modal is rendered when the user clicks on the button 
 "Start a conversation" at the AllConversations component. 
 */
 
@@ -62,8 +63,11 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
     ConversationsOperations.Mutations.createConversation
   );
 
-  /* Returns a list of users that username matches the
-   targetUsername */
+  /* Next.JS router hook to push the conversation id into the URI query
+   params when user creates a new conversation */
+  const nextRouter = useRouter();
+
+  /* Returns a list of users that username matches the targetUsername */
   const handleSearch = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -90,14 +94,30 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
   const handleCreateConversation = async () => {
     const participantsIds = selectedUsers.map((user) => user.id);
     try {
-      /* When clicked, this button will trigger the "createConversation"
+      /* When clicked,  will trigger the "createConversation"
       mutation passing the array of participant ids as an argument */
       const { data: dataCreateConversation } =
         await triggerCreateConversationMutation({
           variables: { participantsIds },
         });
 
-      console.log("aqui estão os dados:", dataCreateConversation);
+      /* Checking so that Typescript can be happy  */
+      if (!dataCreateConversation) {
+        throw new Error("Failed to create conversation");
+      }
+
+      /* Extracting new conversation id from response */
+      const conversationId =
+        dataCreateConversation.createConversation.newConversationId;
+      console.log(conversationId);
+
+      /* Pushing new conversation id into the URI query params */
+      nextRouter.push({ query: { conversationId } });
+
+      /* Clear states and close modal */
+      setSelectedUsers([]);
+      setTargetUsername("");
+      handleOpenCloseModal();
     } catch (error: any) {
       console.log(error);
       toast.error(error?.message);
