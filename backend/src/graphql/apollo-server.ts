@@ -35,12 +35,12 @@ async function startApolloServer() {
     csrfPrevention: true,
     cache: "bounded",
 
-    /*  "context" by default receives the http request as an argument.
-    Apollo will make the object returned from this function available
-    in all of the resolver functions */
+    /*  "context" by default receives the http request as an argument. */
     context: async ({ req, res }): Promise<GraphQLContext> => {
       const currentSession = (await getSession({ req })) as Session;
 
+      /* Apollo will make the object returned from this function available
+      in all of the resolver functions */
       return { currentSession, prisma };
     },
     plugins: [

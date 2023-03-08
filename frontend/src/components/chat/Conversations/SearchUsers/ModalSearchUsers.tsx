@@ -1,4 +1,3 @@
-import { UserFound } from "@/src/util/types";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   Button,
@@ -22,29 +21,17 @@ import {
   CreateConversationData,
   CreateConversationInput,
 } from "@/src/typescriptTypes/conversation";
+import {
+  ModalSearchUsersProps,
+  SearchUsersInput,
+  SearchUsersResult,
+  UserFound,
+} from "@/src/typescriptTypes/users";
 
 /* 
 This modal is opened when the user clicks on the button 
 "Start a conversation" at the AllConversations component. 
 */
-
-/*  Structure of this modal component props */
-interface ModalSearchUsersProps {
-  modalIsOpen: boolean;
-  handleOpenCloseModal: () => void;
-}
-
-/* Structure of the argument that is passed to 
- the "triggerSearchUsersQuery" function */
-interface SearchUsersInput {
-  targetUsername: string;
-}
-
-/* Structure of the data that is returned by the 
-  "triggerSearchUsersQuery" function*/
-interface SearchUsersResult {
-  searchUsers: Array<UserFound>;
-}
 
 const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
   modalIsOpen,
@@ -92,8 +79,10 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
   };
 
   /* Remove user from the selected list */
-  const handleUnselectUser = (userId: string) => {
-    setSelectedUsers((previous) => previous.filter((p) => p.id !== userId));
+  const handleUnselectUser = (userIdToUnselect: string) => {
+    setSelectedUsers((previousUsers) =>
+      previousUsers.filter((user) => user.id !== userIdToUnselect)
+    );
   };
 
   /* Once user participants are selected, the Button
@@ -101,9 +90,14 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
   const handleCreateConversation = async () => {
     const participantsIds = selectedUsers.map((user) => user.id);
     try {
-      const { data } = await triggerCreateConversationMutation({
-        variables: { participantsIds },
-      });
+      /* When clicked, this button will trigger the "createConversation"
+      mutation passing the array of participant ids as an argument */
+      const { data: dataCreateConversation } =
+        await triggerCreateConversationMutation({
+          variables: { participantsIds },
+        });
+
+      console.log("aqui estão os dados:", dataCreateConversation);
     } catch (error: any) {
       console.log(error);
       toast.error(error?.message);
