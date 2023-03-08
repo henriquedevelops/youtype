@@ -8,10 +8,10 @@ const userResolvers = {
   Query: {
     searchUsers: async (
       _: any,
-      /* Receiving new username from input */
+      /* Extracting new username from input */
       { targetUsername }: { targetUsername: string },
 
-      /* Receving current session data and prisma client from context */
+      /* Extracting current session data and prisma client from context */
       { currentSession, prisma }: GraphQLContext
     ): Promise<Array<User>> => {
       /* Authentication */

@@ -5,14 +5,13 @@ const resolvers = {
   Mutation: {
     createConversation: async (
       _: any,
-      /* Receiving new username from input */
+      /* Extracting new username from input */
       { participantsIds }: { participantsIds: string[] },
 
-      /* Receving current session data and prisma client from context */
+      /* Extracting current session data and prisma client from context */
       { currentSession, prisma }: GraphQLContext
     ) => {
       currentSession?.user.id && participantsIds.push(currentSession?.user.id);
-      console.log("Salveeeeeeeeeeee!!!!!", participantsIds);
       return { newConversationId: "abcde" };
     },
   },
