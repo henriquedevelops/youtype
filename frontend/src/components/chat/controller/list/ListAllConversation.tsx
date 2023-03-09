@@ -3,6 +3,7 @@ import { getAllConversationData } from "@/src/typescriptTypes/conversation";
 import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
 import { FunctionComponent as FC } from "react";
+import ConversationItem from "./ConversationItem";
 
 interface ListAllConversationsProps {}
 
@@ -21,10 +22,18 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
   } = useQuery<getAllConversationData, never>(
     conversationsOperations.Queries.getAllConversations
   );
-
-  console.log("aqui esta a data: ", getAllConversationsData);
-
-  return <Flex>whats up</Flex>;
+  const allConversations = getAllConversationsData?.getAllConversations;
+  return (
+    <>
+      {!allConversations ? (
+        <Flex>no conversations yet</Flex>
+      ) : (
+        allConversations.map((conversation) => (
+          <ConversationItem key={conversation.id} conversation={conversation} />
+        ))
+      )}
+    </>
+  );
 };
 
 export default ListAllConversations;

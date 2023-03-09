@@ -14,7 +14,7 @@ export interface CreateConversationInput {
 
 /* Structure of each element of the array that
   is returned by the getAllConversations query */
-type PopulatedConversation = {
+export type PopulatedConversation = {
   id: string;
   latestMessageId: string | null;
   createdAt: Date;
@@ -48,5 +48,5 @@ type PopulatedConversation = {
 /* Structure of the data returned by the 
   getAllConversation query */
 export interface getAllConversationData {
-  conversations: Array<PopulatedConversation>;
+  getAllConversations: Array<PopulatedConversation>;
 }
