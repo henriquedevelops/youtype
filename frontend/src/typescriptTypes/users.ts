@@ -1,3 +1,5 @@
+import { Session } from "next-auth";
+
 /* Structure of this modal component props */
 export interface ModalSearchUsersProps {
   modalIsOpen: boolean;
@@ -36,4 +38,10 @@ export interface argumentSaveUsername {
 export interface UserFound {
   id: string;
   username: string;
+}
+
+/* Structure of the Login component props */
+export interface LoginProps {
+  currentSession: Session | null;
+  reloadSession: () => void;
 }

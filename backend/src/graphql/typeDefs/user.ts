@@ -1,6 +1,15 @@
 import { gql } from "apollo-server-core";
 
-const userTypeDefs = gql`
+export default gql`
+  type User {
+    id: String
+    name: String
+    username: String
+    email: String
+    emailVerified: Boolean
+    image: String
+  }
+
   type UserFound {
     id: String
     username: String
@@ -19,5 +28,3 @@ const userTypeDefs = gql`
     saveUsernameMutation(inputUsername: String): SaveUsernameResponse
   }
 `;
-
-export default userTypeDefs;

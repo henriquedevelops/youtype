@@ -1,13 +1,31 @@
 import { gql } from "apollo-server-core";
 
-const typeDefs = gql`
+export default gql`
+  scalar Date
+
   type CreateConversationResponse {
     newConversationId: String
+  }
+
+  type Conversation {
+    id: String
+    latestMessage: Message
+    participants: [Participant]
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  type Participant {
+    id: String
+    user: User
+    hasSeenLatestMessage: Boolean
+  }
+
+  type Query {
+    getAllConversations: [Conversation]
   }
 
   type Mutation {
     createConversation(participantsIds: [String]): CreateConversationResponse
   }
 `;
-
-export default typeDefs;

@@ -1,3 +1,5 @@
+import { ConversationPopulated } from "../../../backend/src/typescriptTypes/conversation";
+
 /* Structure of the data that is returned from 
 createConversationMutation. */
 export interface CreateConversationData {
@@ -10,4 +12,10 @@ export interface CreateConversationData {
   as argument */
 export interface CreateConversationInput {
   participantsIds: Array<string>;
+}
+
+/* Structure of the data returned by the 
+  getAllConversation query */
+export interface getAllConversationData {
+  conversations: Array<ConversationPopulated>;
 }

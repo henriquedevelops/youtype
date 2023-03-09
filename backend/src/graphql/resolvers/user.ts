@@ -4,6 +4,7 @@ import {
   GraphQLContext,
   SaveUsernameResponse,
 } from "../../typescriptTypes/user";
+
 const userResolvers = {
   Query: {
     searchUsers: async (

@@ -3,15 +3,13 @@ import { FunctionComponent as FC, useState } from "react";
 import { Button, Center, Stack, Text, Image, Input } from "@chakra-ui/react";
 import { useMutation } from "@apollo/client";
 import userOperations from "../../graphql/operations/user";
-import { argumentSaveUsername, DataSaveUsername } from "@/src/util/types";
 import toast from "react-hot-toast";
 import { Session } from "next-auth";
-
-/* Structure of the component props */
-export interface LoginProps {
-  currentSession: Session | null;
-  reloadSession: () => void;
-}
+import {
+  argumentSaveUsername,
+  DataSaveUsername,
+  LoginProps,
+} from "@/src/typescriptTypes/users";
 
 /* Component that contains the login functionality */
 const Login: FC<LoginProps> = ({ currentSession, reloadSession }) => {
