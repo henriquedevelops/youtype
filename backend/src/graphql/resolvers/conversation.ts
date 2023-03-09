@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { ApolloError } from "apollo-server-core";
-import { ConversationPopulated } from "../../typescriptTypes/conversation";
+import { PopulatedConversation } from "../../typescriptTypes/conversation";
 import { GraphQLContext } from "../../typescriptTypes/user";
 
 const resolvers = {
@@ -12,7 +12,7 @@ const resolvers = {
       /* Extracting current session data and prisma client from
       Apollo Server context */
       { currentSession, prisma }: GraphQLContext
-    ): Promise<Array<ConversationPopulated>> => {
+    ): Promise<Array<PopulatedConversation>> => {
       if (!currentSession?.user.id) throw new ApolloError("Not logged in");
 
       try {
