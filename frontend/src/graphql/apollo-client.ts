@@ -1,13 +1,42 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient } from "graphql-ws";
 
-// Setting up endpoint that we will send requests to
+/* Endpoint that the apollo client will send 
+  the queries and mutations to */
 const httpLink = new HttpLink({
   uri: "http://localhost:5000/graphql",
   credentials: "include",
 });
 
+/* Endpoint that the apollo client will send 
+  subscriptions to */
+const wsLink =
+  typeof window !== "undefined"
+    ? new GraphQLWsLink(
+        createClient({ url: "ws://localhost:5000/graphql/subscriptions" })
+      )
+    : null;
+
+/* Setting up front-end to support WebSockets */
+const link =
+  typeof window !== "undefined" && wsLink != null
+    ? split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === "OperationDefinition" &&
+            definition.operation === "subscription"
+          );
+        },
+        wsLink,
+        httpLink
+      )
+    : httpLink;
+
 export const client = new ApolloClient({
-  link: httpLink,
+  link,
 
   // Built-in Apollo caching on the results of the queries
   cache: new InMemoryCache(),
