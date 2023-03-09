@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { ApolloError } from "apollo-server-core";
 import { PopulatedConversation } from "../../typescriptTypes/conversation";
-import { GraphQLContext } from "../../typescriptTypes/user";
+import { GraphQLContext } from "../../typescriptTypes/server";
 
 const resolvers = {
   Query: {
@@ -31,8 +31,11 @@ const resolvers = {
           /* Populating the fields "participants" and "latestMessage" */
           include: participantsAndLatestMessage,
         });
-        console.log(allConversations);
 
+        /* Publish a "conversationCreation" event and trigger the
+          subscription resolver sending the data payload */
+
+        /* Send array of populated conversations to the client */
         return allConversations;
       } catch (error) {
         console.log(error);

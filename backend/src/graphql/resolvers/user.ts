@@ -1,9 +1,7 @@
 import { ApolloError } from "apollo-server-core";
 import { User } from "@prisma/client";
-import {
-  GraphQLContext,
-  SaveUsernameResponse,
-} from "../../typescriptTypes/user";
+import { GraphQLContext } from "../../typescriptTypes/server";
+import { SaveUsernameResponse } from "../../typescriptTypes/user";
 
 const userResolvers = {
   Query: {
