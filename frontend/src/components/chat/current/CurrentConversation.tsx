@@ -2,27 +2,26 @@ import { Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FunctionComponent as FC } from "react";
 
-interface WrapCurrentConversationProps {}
+interface CurrentConversationProps {}
 
 /* 
 This wrapper component contains some core logic that can
 be reused in its child components
 */
 
-const WrapCurrentConversation: FC<WrapCurrentConversationProps> = () => {
+const CurrentConversation: FC<CurrentConversationProps> = () => {
   /* Extracting current conversation id */
   const nextRouter = useRouter();
   const { conversationId: currentConversationId } = nextRouter.query;
 
   return (
     <Flex
-      display={{ base: currentConversationId ? "flex" : "none" }}
+      display={{ base: currentConversationId ? "flex" : "block" }}
       width="100%"
       direction="column"
-      border="1px solid red"
     >
       {currentConversationId ? (
-        <Flex>Current chat</Flex>
+        <Flex>Current conversation</Flex>
       ) : (
         <Flex>Nextype Messenger</Flex>
       )}
@@ -30,4 +29,4 @@ const WrapCurrentConversation: FC<WrapCurrentConversationProps> = () => {
   );
 };
 
-export default WrapCurrentConversation;
+export default CurrentConversation;
