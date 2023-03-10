@@ -1,6 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { ApolloError } from "apollo-server-core";
-import { PopulatedConversation } from "../../typescriptTypes/conversation";
+import { GraphQLError } from "graphql";
+import { withFilter } from "graphql-subscriptions";
+import {
+  ConversationCreationSubscriptionPayload,
+  PopulatedConversation,
+} from "../../typescriptTypes/conversation";
 import { GraphQLContext } from "../../typescriptTypes/server";
 
 const resolvers = {
@@ -94,13 +99,33 @@ const resolvers = {
   },
 
   Subscription: {
-    /* This subscription is triggered when a new conversation is
-    created. It sends the newly created conversation to the client 
-    in real-time */
+    /* This subscription listens to the conversation creation event 
+      at the createConversation resolver */
     conversationCreation: {
-      subscribe: (_: any, __: any, { pubsub }: GraphQLContext) => {
-        return pubsub.asyncIterator(["CONVERSATION_CREATION"]);
-      },
+      subscribe: withFilter(
+        (_: any, __: any, { pubsub }: GraphQLContext) => {
+          return pubsub.asyncIterator(["CONVERSATION_CREATION"]);
+        },
+
+        /* Filtering non participants */
+        (
+          {
+            conversationCreation: { participants },
+          }: ConversationCreationSubscriptionPayload,
+          _,
+          { currentSession }: GraphQLContext
+        ) => {
+          if (!currentSession?.user) {
+            throw new GraphQLError("Not authorized");
+          }
+
+          const { id: userId } = currentSession.user;
+          const currentUserIsParticipant = !!participants.find(
+            (participant) => participant.userId === userId
+          );
+          return currentUserIsParticipant;
+        }
+      ),
     },
   },
 };

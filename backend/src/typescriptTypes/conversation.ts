@@ -20,3 +20,7 @@ export interface CreateConversationInput {
 export type PopulatedConversation = Prisma.ConversationGetPayload<{
   include: typeof participantsAndLatestMessage;
 }>;
+
+export interface ConversationCreationSubscriptionPayload {
+  conversationCreation: PopulatedConversation;
+}
