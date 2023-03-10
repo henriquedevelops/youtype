@@ -45,8 +45,15 @@ export type PopulatedConversation = {
     | null;
 };
 
-/* Structure of the data returned by the 
-  getAllConversation query */
+/* Structure of the data returned by the getAllConversation query */
 export interface getAllConversationData {
   getAllConversations: Array<PopulatedConversation>;
+}
+
+/* Structure of the data that is received as argument by
+subscribeToMore function in the conversation creation subscription  */
+export interface newValueUpdateQuery {
+  subscriptionData: {
+    data: { conversationCreation: PopulatedConversation };
+  };
 }

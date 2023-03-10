@@ -28,4 +28,8 @@ export default gql`
   type Mutation {
     createConversation(participantsIds: [String]): CreateConversationResponse
   }
+
+  type Subscription {
+    conversationCreation: Conversation
+  }
 `;

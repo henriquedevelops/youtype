@@ -1,8 +1,12 @@
 import conversationsOperations from "@/src/graphql/operations/conversation";
-import { getAllConversationData } from "@/src/typescriptTypes/conversation";
+import {
+  getAllConversationData,
+  newValueUpdateQuery,
+  PopulatedConversation,
+} from "@/src/typescriptTypes/conversation";
 import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
-import { FunctionComponent as FC } from "react";
+import { FunctionComponent as FC, useEffect } from "react";
 import ConversationItem from "./ConversationItem";
 
 interface ListAllConversationsProps {}
@@ -19,16 +23,48 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
     data: getAllConversationsData,
     loading: isLoadingConversations,
     error: errorLoadingConversations,
+    subscribeToMore,
   } = useQuery<getAllConversationData, never>(
     conversationsOperations.Queries.getAllConversations
   );
-  const allConversations = getAllConversationsData?.getAllConversations;
+
+  console.log("******************1", getAllConversationsData);
+
+  /* Function responsible for updating the conversation list in real-time */
+  const subscribeToNewConversations = () => {
+    subscribeToMore({
+      document: conversationsOperations.Subscriptions.conversationCreation,
+      updateQuery: (
+        previousValue,
+        { subscriptionData: newValue }: newValueUpdateQuery
+      ) => {
+        if (!newValue) return previousValue;
+
+        console.log("--------------", newValue);
+
+        /* "getAllConversationsData" will be updated with the value returned
+        here (which includes the new conversation when there is one) */
+        return Object.assign({}, previousValue, {
+          getAllConversations: [
+            newValue.data.conversationCreation,
+            ...previousValue.getAllConversations,
+          ],
+        });
+      },
+    });
+  };
+
+  /* Execute subscription to new conversations when mounting the component */
+  useEffect(() => {
+    subscribeToNewConversations();
+  }, []);
+
   return (
     <>
-      {!allConversations ? (
+      {!getAllConversationsData?.getAllConversations ? (
         <Flex>no conversations yet</Flex>
       ) : (
-        allConversations.map((conversation) => (
+        getAllConversationsData?.getAllConversations.map((conversation) => (
           <ConversationItem key={conversation.id} conversation={conversation} />
         ))
       )}

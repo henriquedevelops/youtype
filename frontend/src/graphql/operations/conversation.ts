@@ -1,38 +1,40 @@
 import { gql } from "@apollo/client";
 
 /* The gql function is used to parse the GraphQL code into
-a synthax that can be used by the Apollo client to send the
-mutation to the GraphQL server. */
+a synthax that can be interpreted by the Apollo client to 
+send the mutation to the GraphQL server. */
+
+/* Structure of the conversation object that is returned
+ */
+const populatedConversationFields = `
+  id
+  participants {
+    user {
+      id
+      username
+    }
+    hasSeenLatestMessage
+  }
+  latestMessage {
+    id
+    sender {
+      id
+      username
+    }
+    body
+    createdAt
+  }
+  updatedAt`;
 
 export default {
   Queries: {
-    /* Query for nested properties on conversations and their
-    respective participants */
+    /* Query for conversations populated with participants and
+    latest message */
     getAllConversations: gql`
-      query {
-        getAllConversations {
-          id
-          participants {
-            user {
-              id
-              username
-            }
-            hasSeenLatestMessage
-          }
-          latestMessage {
-            id
-            sender {
-              id
-              username
-            }
-            body
-            createdAt
-          }
-          updatedAt
-        }
-      }
+      query { getAllConversations {${populatedConversationFields}}}
     `,
   },
+
   Mutations: {
     /* Triggers the mutation called(createConversation). 
     It takes an array of participant ids as arguments and returns
@@ -45,5 +47,13 @@ export default {
       }
     `,
   },
-  Subscriptions: {},
+
+  Subscriptions: {
+    conversationCreation: gql`
+     subscription {
+      conversationCreation 
+        { ${populatedConversationFields}}
+     }
+    `,
+  },
 };
