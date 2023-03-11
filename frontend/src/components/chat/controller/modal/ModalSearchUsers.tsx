@@ -107,12 +107,11 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
       }
 
       /* Extracting new conversation id from response */
-      const conversationId =
+      const selectedConversationId =
         dataCreateConversation.createConversation.newConversationId;
-      console.log(conversationId);
 
       /* Pushing new conversation id into the URI query params */
-      nextRouter.push({ query: { conversationId } });
+      nextRouter.push({ query: { selectedConversationId } });
 
       /* Clear states and close modal */
       setSelectedUsers([]);

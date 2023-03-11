@@ -12,6 +12,20 @@ export interface CreateConversationInput {
   participantsIds: Array<string>;
 }
 
+export type PopulatedParticipant = {
+  id: string;
+  userId: string;
+  conversationId: string;
+  hasSeenLatestMessage: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+} & {
+  user: {
+    id: string;
+    username: string | null;
+  };
+};
+
 /* Structure of each element of the array that
   is returned by the getAllConversations query */
 export type PopulatedConversation = {

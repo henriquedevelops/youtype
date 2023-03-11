@@ -12,15 +12,15 @@ be reused in its child components
 const CurrentConversation: FC<CurrentConversationProps> = () => {
   /* Extracting current conversation id */
   const nextRouter = useRouter();
-  const { conversationId: currentConversationId } = nextRouter.query;
+  const { selectedConversationId } = nextRouter.query;
 
   return (
     <Flex
-      display={{ base: currentConversationId ? "flex" : "block" }}
+      display={{ base: selectedConversationId ? "flex" : "block" }}
       width="100%"
       direction="column"
     >
-      {currentConversationId ? (
+      {selectedConversationId ? (
         <Flex>Current conversation</Flex>
       ) : (
         <Flex>Nextype Messenger</Flex>

@@ -4,12 +4,12 @@ import { getSession, useSession } from "next-auth/react";
 import EntireChat from "../components/chat/EntireChat";
 import Login from "../components/login";
 
-// Server-side rendering
+/* Server-side rendering */
 export async function getServerSideProps(context: NextPageContext) {
-  // Extracting current session information from incoming request
+  /* Extracting current session information from incoming request */
   const currentSession = await getSession(context);
 
-  // Passing pre-rendered data to the page component as props
+  /* Passing pre-rendered data to the page component as props */
   return {
     props: {
       currentSession,
@@ -17,18 +17,18 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
-// Main page component
+/* Main page component */
 const Home: Page = () => {
-  // Extracting current session information from props
+  /* Extracting current session information from props */
   const { data: currentSession } = useSession();
 
-  // Automatically refetching the page after a user update
+  /* Automatically refetching the page after a user update */
   const reloadSession = () => {
     const event = new Event("visibilitychange");
     document.dispatchEvent(event);
   };
 
-  // If user is logged in send him to chat, if not, send him to login
+  /* If user is logged in send him to chat, if not, send him to login */
   return (
     <Box>
       {currentSession?.user?.username ? (

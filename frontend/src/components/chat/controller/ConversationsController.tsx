@@ -1,4 +1,4 @@
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { FunctionComponent as FC } from "react";
 import { Button, Center, Flex, Box } from "@chakra-ui/react";
 import { Session } from "next-auth";
@@ -7,6 +7,7 @@ import conversationsOperations from "../../../graphql/operations/conversation";
 import { useQuery } from "@apollo/client";
 import { getAllConversationData } from "@/src/typescriptTypes/conversation";
 import ListAllConversation from "./list/ListAllConversation";
+import { useRouter } from "next/router";
 
 interface ConversationsControllerProps {}
 
@@ -17,8 +18,18 @@ authenticated user (from which he can choose the current conversation).
 */
 
 const ConversationsController: FC<ConversationsControllerProps> = () => {
+  const { data: currentSession } = useSession();
+  const nextRouter = useRouter();
+  const { selectedConversationId } = nextRouter.query;
+
   return (
-    <Box width={{ base: "100%", md: "400px" }} bg="whiteAlpha.50" py={6} px={3}>
+    <Box
+      display={{ base: selectedConversationId ? "none" : "block", md: "block" }}
+      width={{ base: "100%", md: "400px" }}
+      bg="whiteAlpha.50"
+      py={6}
+      px={3}
+    >
       <ButtonStartConversation />
       <ListAllConversation />
     </Box>

@@ -6,6 +6,7 @@ import {
 } from "@/src/typescriptTypes/conversation";
 import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { FunctionComponent as FC, useEffect } from "react";
 import ConversationItem from "./ConversationItem";
 
@@ -28,7 +29,13 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
     conversationsOperations.Queries.getAllConversations
   );
 
-  console.log("******************1", getAllConversationsData);
+  /* Execute subscription to new conversations when mounting the component */
+  useEffect(() => {
+    subscribeToNewConversations();
+  }, []);
+
+  const nextRouter = useRouter();
+  const selectedConversationId = nextRouter.query.selectedConversationId;
 
   /* Function responsible for updating the conversation list in real-time */
   const subscribeToNewConversations = () => {
@@ -39,8 +46,6 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
         { subscriptionData: newValue }: newValueUpdateQuery
       ) => {
         if (!newValue) return previousValue;
-
-        console.log("--------------", newValue);
 
         /* "getAllConversationsData" will be updated with the value returned
         here (which includes the new conversation when there is one) */
@@ -54,18 +59,26 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
     });
   };
 
-  /* Execute subscription to new conversations when mounting the component */
-  useEffect(() => {
-    subscribeToNewConversations();
-  }, []);
+  /* Function clicks when the user clicks in one of the conversations
+   from the list */
+  const handleSelectConversation = async (selectedConversationId: string) => {
+    /* Push the selected conversation id to the router query params */
+    nextRouter.push({ query: { selectedConversationId } });
+
+    /* Mark the conversation as read */
+  };
 
   return (
     <>
       {!getAllConversationsData?.getAllConversations ? (
         <Flex>no conversations yet</Flex>
       ) : (
-        getAllConversationsData?.getAllConversations.map((conversation) => (
-          <ConversationItem key={conversation.id} conversation={conversation} />
+        getAllConversationsData?.getAllConversations.map((item) => (
+          <ConversationItem
+            isSelected={item.id === selectedConversationId}
+            key={item.id}
+            conversation={item}
+          />
         ))
       )}
     </>
