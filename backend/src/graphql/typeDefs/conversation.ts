@@ -23,6 +23,7 @@ export default gql`
 
   type Query {
     getAllConversations: [Conversation]
+    getConversationById(selectedConversationId: String): Conversation
   }
 
   type Mutation {

@@ -4,10 +4,15 @@ import { PopulatedParticipant } from "../typescriptTypes/conversation";
 participants separated by a comma */
 export const formatParticipantsUsernames = (
   participants: Array<PopulatedParticipant>,
-  currentUser: string
+  loggedUserId: string
 ): string => {
+  console.log(participants);
+  if (!participants) {
+    return "";
+  }
+
   const formattedString = participants
-    .filter((participant) => participant.user.id != currentUser)
+    .filter((participant) => participant.user.id != loggedUserId)
     .map((participant) => participant.user.username);
 
   return formattedString.join(", ");

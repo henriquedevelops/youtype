@@ -20,7 +20,8 @@ authenticated user (from which he can choose the current conversation).
 const ConversationsController: FC<ConversationsControllerProps> = () => {
   const { data: currentSession } = useSession();
   const nextRouter = useRouter();
-  const { selectedConversationId } = nextRouter.query;
+  const selectedConversationId = nextRouter.query
+    .selectedConversationId as string;
 
   return (
     <Box

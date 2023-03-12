@@ -71,3 +71,15 @@ export interface newValueUpdateQuery {
     data: { conversationCreation: PopulatedConversation };
   };
 }
+
+export interface QueryConversationByIdArgument {
+  selectedConversationId: string;
+}
+
+export interface GetConversationByIdData {
+  getConversationById: PopulatedConversation;
+}
+
+export interface HeaderMessagePanelProps {
+  selectedConversation: PopulatedConversation;
+}

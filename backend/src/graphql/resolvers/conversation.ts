@@ -44,6 +44,37 @@ const resolvers = {
         throw new ApolloError("Error fetching conversations");
       }
     },
+    getConversationById: async (
+      _: any,
+      { selectedConversationId }: { selectedConversationId: string },
+      { currentSession, prisma }: GraphQLContext
+    ): Promise<PopulatedConversation> => {
+      if (!currentSession?.user.id) throw new ApolloError("Not logged in");
+
+      try {
+        /* Fetch conversation by ID and populate the fields "participants" and "latestMessage" */
+        const conversationFound = await prisma.conversation.findUnique({
+          where: {
+            id: selectedConversationId,
+          },
+          include: participantsAndLatestMessage,
+        });
+
+        if (!conversationFound) throw new ApolloError("Conversation not found");
+
+        /* Making sure the current user is a participant of the conversation */
+        const isParticipant = conversationFound.participants.some(
+          (p) => p.userId === currentSession.user.id
+        );
+        if (!isParticipant) throw new ApolloError("Access denied");
+
+        /* Send populated conversation to the client */
+        return conversationFound;
+      } catch (error) {
+        console.log(error);
+        throw new ApolloError("Error fetching conversation");
+      }
+    },
   },
 
   Mutation: {

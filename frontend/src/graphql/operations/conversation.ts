@@ -33,6 +33,11 @@ export default {
     getAllConversations: gql`
       query { getAllConversations {${populatedConversationFields}}}
     `,
+    getConversationById: gql`
+      query ($selectedConversationId: String!) {
+        getConversationById(selectedConversationId: $selectedConversationId) {${populatedConversationFields}}
+      }
+    `,
   },
 
   Mutations: {

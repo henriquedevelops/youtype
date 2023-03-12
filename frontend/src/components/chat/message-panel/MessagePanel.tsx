@@ -3,18 +3,30 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { FunctionComponent as FC } from "react";
 import { HeaderMessagePanel } from "./HeaderMessagePanel";
+import conversationsOperations from "../../../graphql/operations/conversation";
+import { useQuery } from "@apollo/client";
+import {
+  GetConversationByIdData,
+  QueryConversationByIdArgument,
+} from "@/src/typescriptTypes/conversation";
 
-interface MessagePanelProps {}
+interface MessagePanelProps {
+  selectedConversationId: string;
+}
 
 /* 
 
 */
 
-const MessagePanel: FC<MessagePanelProps> = () => {
+const MessagePanel: FC<MessagePanelProps> = ({ selectedConversationId }) => {
   const nextRouter = useRouter();
-  const selectedConversationId = nextRouter.query
-    .selectedConversationId as string;
-  const loggedUserId = useSession().data?.user.id;
+
+  const { data: GetConversationByIdData, loading: isLoadingConversation } =
+    useQuery<GetConversationByIdData, QueryConversationByIdArgument>(
+      conversationsOperations.Queries.getConversationById,
+      { variables: { selectedConversationId } }
+    );
+  const selectedConversation = GetConversationByIdData?.getConversationById;
 
   return (
     <Flex
@@ -28,9 +40,10 @@ const MessagePanel: FC<MessagePanelProps> = () => {
           justify="space-between"
           overflow="hidden"
           flexGrow={1}
-          border="1px solid red"
         >
-          <HeaderMessagePanel selectedConversationId={selectedConversationId} />
+          {selectedConversation && (
+            <HeaderMessagePanel selectedConversation={selectedConversation} />
+          )}
           Messages here
         </Flex>
       ) : (
