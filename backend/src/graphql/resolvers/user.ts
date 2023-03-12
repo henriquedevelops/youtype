@@ -3,7 +3,7 @@ import { User } from "@prisma/client";
 import { GraphQLContext } from "../../typescriptTypes/server";
 import { SaveUsernameResponse } from "../../typescriptTypes/user";
 
-const userResolvers = {
+export default {
   Query: {
     searchUsers: async (
       _: any,
@@ -76,5 +76,3 @@ const userResolvers = {
     },
   },
 };
-
-export default userResolvers;

@@ -32,7 +32,7 @@ const MessagePanel: FC<MessagePanelProps> = ({ selectedConversationId }) => {
 
   return (
     <Flex
-      display={{ base: selectedConversationId ? "flex" : "none" }}
+      display={{ base: selectedConversationId ? "flex" : "none", md: "flex" }}
       width="100%"
       direction="column"
     >

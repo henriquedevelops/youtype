@@ -7,4 +7,17 @@ export default gql`
     body: String
     createdAt: Date
   }
+
+  type Mutation {
+    createMessage(
+      messageId: String
+      selectedConversationId: String
+      senderId: String
+      messageBody: String
+    ): Boolean
+  }
+
+  type Subscription {
+    messageCreation(selectedConversationId: String): Message
+  }
 `;
