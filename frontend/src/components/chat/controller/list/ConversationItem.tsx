@@ -23,6 +23,7 @@ import { useSession } from "next-auth/react";
 interface ConversationItemProps {
   conversation: PopulatedConversation;
   isSelected: boolean;
+  onClick: (selectedConversationId: string) => Promise<void>;
 }
 
 /* 
@@ -42,39 +43,13 @@ const ConversationItem: FC<ConversationItemProps> = ({
       direction="row"
       align="center"
       justify="space-between"
-      p={4}
+      p={3}
       cursor="pointer"
       borderRadius={4}
-      bg={isSelected ? "whiteAlpha.200" : "none"}
-      _hover={{ bg: "whiteAlpha.200" }}
+      bg={isSelected ? "whiteAlpha.100" : "none"}
+      _hover={{ bg: "whiteAlpha.100" }}
       position="relative"
     >
-      <Menu>
-        <MenuList bg="#2d2d2d">
-          <MenuItem
-            icon={<AiOutlineEdit fontSize={20} />}
-            onClick={(event) => {
-              event.stopPropagation();
-              //   onEditConversation();
-            }}
-            bg="#2d2d2d"
-            _hover={{ bg: "whiteAlpha.300" }}
-          >
-            Edit
-          </MenuItem>
-          <MenuItem
-            icon={<MdDeleteOutline fontSize={20} />}
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-            bg="#2d2d2d"
-            _hover={{ bg: "whiteAlpha.300" }}
-          >
-            Delete
-          </MenuItem>
-        </MenuList>
-      </Menu>
-      <Flex position="absolute" left="-6px"></Flex>
       <Avatar />
       <Flex justify="space-between" width="80%" height="100%">
         <Flex direction="column" width="70%" height="100%">
@@ -107,7 +82,7 @@ const ConversationItem: FC<ConversationItemProps> = ({
           color="whiteAlpha.700"
           textAlign="right"
           position="absolute"
-          right={2}
+          right={4}
         >
           {formatRelative(new Date(conversation.updatedAt), new Date(), {
             locale: {

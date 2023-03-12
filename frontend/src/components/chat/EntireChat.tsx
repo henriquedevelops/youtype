@@ -25,7 +25,6 @@ const EntireChat: FC<ChatProps> = () => {
     <Flex height="100vh">
       <ConversationsController />
       <MessagePanel selectedConversationId={selectedConversationId} />
-      {/* <Button onClick={() => signOut()}>Logout</Button> */}
     </Flex>
   );
 };

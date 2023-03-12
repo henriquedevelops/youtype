@@ -19,7 +19,7 @@ const ButtonStartConversation: FC<{}> = () => {
   };
   return (
     <>
-      <Button width="100%" onClick={handleOpenCloseModal}>
+      <Button marginBottom={5} width="100%" onClick={handleOpenCloseModal}>
         Start a conversation
       </Button>
       {modalIsOpen ? (

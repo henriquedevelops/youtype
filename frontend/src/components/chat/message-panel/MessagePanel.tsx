@@ -9,6 +9,8 @@ import {
   GetConversationByIdData,
   QueryConversationByIdArgument,
 } from "@/src/typescriptTypes/conversation";
+import { InputMessageField } from "./InputMessageField";
+import { FeedMessage } from "./FeedMessage";
 
 interface MessagePanelProps {
   selectedConversationId: string;
@@ -30,7 +32,7 @@ const MessagePanel: FC<MessagePanelProps> = ({ selectedConversationId }) => {
 
   return (
     <Flex
-      display={{ base: selectedConversationId ? "flex" : "block" }}
+      display={{ base: selectedConversationId ? "flex" : "none" }}
       width="100%"
       direction="column"
     >
@@ -42,9 +44,12 @@ const MessagePanel: FC<MessagePanelProps> = ({ selectedConversationId }) => {
           flexGrow={1}
         >
           {selectedConversation && (
-            <HeaderMessagePanel selectedConversation={selectedConversation} />
+            <>
+              <HeaderMessagePanel selectedConversation={selectedConversation} />
+              <FeedMessage />
+              <InputMessageField />
+            </>
           )}
-          Messages here
         </Flex>
       ) : (
         <Flex>Nextype Messenger</Flex>

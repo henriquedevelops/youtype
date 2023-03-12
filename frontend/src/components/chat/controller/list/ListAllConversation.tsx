@@ -65,7 +65,7 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
    from the list */
   const handleSelectConversation = async (selectedConversationId: string) => {
     /* Push the selected conversation id to the router query params */
-    nextRouter.push({ query: { selectedConversationId } });
+    await nextRouter.push({ query: { selectedConversationId } });
 
     /* Mark the conversation as read */
   };
@@ -80,6 +80,7 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
             isSelected={item.id === selectedConversationId}
             key={item.id}
             conversation={item}
+            onClick={() => handleSelectConversation(item.id)}
           />
         ))
       )}
