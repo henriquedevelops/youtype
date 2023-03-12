@@ -1,4 +1,4 @@
-import { ApolloError } from "apollo-server-core";
+import { GraphQLError } from "graphql";
 import { User } from "@prisma/client";
 import { GraphQLContext } from "../../typescriptTypes/server";
 import { SaveUsernameResponse } from "../../typescriptTypes/user";
@@ -14,7 +14,7 @@ const userResolvers = {
       { currentSession, prisma }: GraphQLContext
     ): Promise<Array<User>> => {
       /* Authentication */
-      if (!currentSession?.user) throw new ApolloError("Not logged in");
+      if (!currentSession?.user) throw new GraphQLError("Not logged in");
       try {
         const searchResult = await prisma.user.findMany({
           where: {
@@ -32,7 +32,7 @@ const userResolvers = {
 
         return searchResult;
       } catch (error: any) {
-        throw new ApolloError(error?.message);
+        throw new GraphQLError(error?.message);
       }
     },
   },
@@ -49,14 +49,14 @@ const userResolvers = {
       { currentSession, prisma }: GraphQLContext
     ): Promise<SaveUsernameResponse> => {
       /* Authentication */
-      if (!currentSession?.user) throw new ApolloError("Not logged in.");
+      if (!currentSession?.user) throw new GraphQLError("Not logged in.");
       try {
         /* Checking if username is not already taken by another user */
         const alreadyExistingUser = await prisma.user.findUnique({
           where: { username: inputUsername },
         });
         if (alreadyExistingUser)
-          throw new ApolloError("Username not available.");
+          throw new GraphQLError("Username not available.");
 
         /* Saving new username in database */
         await prisma.user.update({

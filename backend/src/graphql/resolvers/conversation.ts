@@ -1,5 +1,4 @@
 import { Prisma } from "@prisma/client";
-import { ApolloError } from "apollo-server-core";
 import { GraphQLError } from "graphql";
 import { withFilter } from "graphql-subscriptions";
 import {
@@ -18,7 +17,7 @@ const resolvers = {
       Apollo Server context */
       { currentSession, prisma }: GraphQLContext
     ): Promise<Array<PopulatedConversation>> => {
-      if (!currentSession?.user.id) throw new ApolloError("Not logged in");
+      if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
 
       try {
         /* Fetch all conversations from currently authenticated user */
@@ -41,7 +40,7 @@ const resolvers = {
         return allConversations;
       } catch (error) {
         console.log(error);
-        throw new ApolloError("Error fetching conversations");
+        throw new GraphQLError("Error fetching conversations");
       }
     },
     getConversationById: async (
@@ -49,7 +48,7 @@ const resolvers = {
       { selectedConversationId }: { selectedConversationId: string },
       { currentSession, prisma }: GraphQLContext
     ): Promise<PopulatedConversation> => {
-      if (!currentSession?.user.id) throw new ApolloError("Not logged in");
+      if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
 
       try {
         /* Fetch conversation by ID and populate the fields "participants" and "latestMessage" */
@@ -60,19 +59,20 @@ const resolvers = {
           include: participantsAndLatestMessage,
         });
 
-        if (!conversationFound) throw new ApolloError("Conversation not found");
+        if (!conversationFound)
+          throw new GraphQLError("Conversation not found");
 
         /* Making sure the current user is a participant of the conversation */
         const isParticipant = conversationFound.participants.some(
           (p) => p.userId === currentSession.user.id
         );
-        if (!isParticipant) throw new ApolloError("Access denied");
+        if (!isParticipant) throw new GraphQLError("Access denied");
 
         /* Send populated conversation to the client */
         return conversationFound;
       } catch (error) {
         console.log(error);
-        throw new ApolloError("Error fetching conversation");
+        throw new GraphQLError("Error fetching conversation");
       }
     },
   },
@@ -87,7 +87,7 @@ const resolvers = {
       /* Extracting current session data and prisma client from context */
       { currentSession, prisma, pubsub }: GraphQLContext
     ): Promise<{ newConversationId: string }> => {
-      if (!currentSession?.user.id) throw new ApolloError("Not logged in");
+      if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
       /* Insert currently authenticated user into the conversation he is creating */
       participantsIds.push(currentSession?.user.id);
 
@@ -124,7 +124,7 @@ const resolvers = {
         return { newConversationId: newConversation.id };
       } catch (error) {
         console.log(error);
-        throw new ApolloError("Error creating conversation");
+        throw new GraphQLError("Error creating conversation");
       }
     },
   },

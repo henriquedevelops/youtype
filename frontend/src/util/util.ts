@@ -6,11 +6,6 @@ export const formatParticipantsUsernames = (
   participants: Array<PopulatedParticipant>,
   loggedUserId: string
 ): string => {
-  console.log(participants);
-  if (!participants) {
-    return "";
-  }
-
   const formattedString = participants
     .filter((participant) => participant.user.id != loggedUserId)
     .map((participant) => participant.user.username);
