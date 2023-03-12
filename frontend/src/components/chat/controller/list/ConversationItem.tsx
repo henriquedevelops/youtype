@@ -35,7 +35,7 @@ const ConversationItem: FC<ConversationItemProps> = ({
   isSelected,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { data: currentSession } = useSession();
+  const loggedUserId = useSession().data?.user.id;
 
   return (
     <Stack
@@ -84,10 +84,10 @@ const ConversationItem: FC<ConversationItemProps> = ({
             overflow="hidden"
             textOverflow="ellipsis"
           >
-            {currentSession?.user?.id &&
+            {loggedUserId &&
               formatParticipantsUsernames(
                 conversation.participants,
-                currentSession?.user?.id
+                loggedUserId
               )}
           </Text>
           {conversation.latestMessage && (

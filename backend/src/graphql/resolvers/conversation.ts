@@ -119,9 +119,8 @@ const resolvers = {
             throw new GraphQLError("Not authorized");
           }
 
-          const { id: userId } = currentSession.user;
           const currentUserIsParticipant = !!participants.find(
-            (participant) => participant.userId === userId
+            (participant) => participant.userId === currentSession.user.id
           );
           return currentUserIsParticipant;
         }

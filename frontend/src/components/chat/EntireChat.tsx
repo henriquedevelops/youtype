@@ -2,7 +2,7 @@ import { signOut } from "next-auth/react";
 import { FunctionComponent as FC } from "react";
 import { Button, Center, Flex } from "@chakra-ui/react";
 // import ConversationsController from "./controller/ConversationsController";
-import CurrentConversation from "./current/CurrentConversation";
+import MessagePanel from "./message-panel/MessagePanel";
 import { Session } from "next-auth";
 import ConversationsController from "./controller/ConversationsController";
 
@@ -19,7 +19,7 @@ const EntireChat: FC<ChatProps> = () => {
   return (
     <Flex height="100vh">
       <ConversationsController />
-      <CurrentConversation />
+      <MessagePanel />
       {/* <Button onClick={() => signOut()}>Logout</Button> */}
     </Flex>
   );

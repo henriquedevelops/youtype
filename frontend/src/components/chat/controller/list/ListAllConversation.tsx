@@ -34,8 +34,10 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
     subscribeToNewConversations();
   }, []);
 
+  /* Extracting currently selected conversation Id to highlight on the list */
   const nextRouter = useRouter();
-  const selectedConversationId = nextRouter.query.selectedConversationId;
+  const selectedConversationId = nextRouter.query
+    .selectedConversationId as string;
 
   /* Function responsible for updating the conversation list in real-time */
   const subscribeToNewConversations = () => {
