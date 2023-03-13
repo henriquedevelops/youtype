@@ -8,6 +8,10 @@ export default gql`
     createdAt: Date
   }
 
+  type Query {
+    getAllMessages(selectedConversationId: String): [Message]
+  }
+
   type Mutation {
     createMessage(
       messageId: String

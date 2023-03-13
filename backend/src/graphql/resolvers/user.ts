@@ -32,7 +32,7 @@ export default {
 
         return searchResult;
       } catch (error: any) {
-        throw new GraphQLError(error?.message);
+        throw new GraphQLError("Nothing found");
       }
     },
   },

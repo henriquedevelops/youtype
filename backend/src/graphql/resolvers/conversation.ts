@@ -33,7 +33,7 @@ export default {
           },
 
           /* Populating the fields "participants" and "latestMessage" */
-          include: participantsAndLatestMessage,
+          include: populateParticipantsAndLatestMessage,
         });
 
         /* Send array of populated conversations to the client */
@@ -60,7 +60,7 @@ export default {
           where: {
             id: selectedConversationId,
           },
-          include: participantsAndLatestMessage,
+          include: populateParticipantsAndLatestMessage,
         });
 
         if (!conversationFound)
@@ -113,10 +113,10 @@ export default {
             },
           },
 
-          /* This "include" specifies the fields that shall be present on this 
+          /* This "include" specifies the fields that shall be populated on this 
           "newConversation" object that is returned from the 
           prisma.conversation.create() */
-          include: participantsAndLatestMessage,
+          include: populateParticipantsAndLatestMessage,
         });
 
         /* Update conversation lists of the participants in
@@ -135,15 +135,14 @@ export default {
   },
 
   Subscription: {
-    /* This subscription listens to the conversation creation event 
-      at the createConversation resolver */
     conversationCreation: {
+      /* This subscription is triggered every time there is an
+         event on the "CONVERSATION_CREATION" channel */
       subscribe: withFilter(
         (_: any, __: any, { pubsub }: GraphQLContext) => {
           return pubsub.asyncIterator(["CONVERSATION_CREATION"]);
         },
 
-        /* Filtering non participants */
         (
           {
             conversationCreation: { participants },
@@ -158,6 +157,7 @@ export default {
           const currentUserIsParticipant = !!participants.find(
             (participant) => participant.userId === currentSession.user.id
           );
+
           return currentUserIsParticipant;
         }
       ),
@@ -167,17 +167,20 @@ export default {
 
 /* Reusable piece of query that populates the fields "participants"
  and "latestMessage" in the queried conversation */
-export const participantsAndLatestMessage =
+export const populateParticipants =
+  Prisma.validator<Prisma.ConversationParticipantInclude>()({
+    user: {
+      select: {
+        id: true,
+        username: true,
+      },
+    },
+  });
+
+export const populateParticipantsAndLatestMessage =
   Prisma.validator<Prisma.ConversationInclude>()({
     participants: {
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-      },
+      include: populateParticipants,
     },
     latestMessage: {
       include: {

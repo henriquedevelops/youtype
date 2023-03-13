@@ -1,10 +1,65 @@
 import { Prisma } from "@prisma/client";
 import { GraphQLError } from "graphql";
-import { ArgumentsCreateMessage } from "../../typescriptTypes/message";
+import { withFilter } from "graphql-subscriptions";
+import {
+  ArgumentsCreateMessage,
+  MessageCreationSubscriptionPayload,
+  PopulatedMessage,
+} from "../../typescriptTypes/message";
 import { GraphQLContext } from "../../typescriptTypes/server";
+import { verifyConversationParticipant } from "../../util/util";
+import { populateParticipantsAndLatestMessage } from "./conversation";
 
 export default {
-  Query: {},
+  Query: {
+    getAllMessages: async (
+      _: any,
+
+      /* Extracting from input */
+      { selectedConversationId }: { selectedConversationId: string },
+
+      /* Extracting from Apollo context */
+      { currentSession, prisma, pubsub }: GraphQLContext
+    ): Promise<Array<PopulatedMessage>> => {
+      /* Requering login */
+      if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
+
+      /* Validating conversation id */
+      const existingConversation = await prisma.conversation.findUnique({
+        where: {
+          id: selectedConversationId,
+        },
+        include: populateParticipantsAndLatestMessage,
+      });
+      if (!existingConversation)
+        throw new GraphQLError("Conversation not found");
+
+      /* Authorizing user */
+      const userIsAuthorized = verifyConversationParticipant(
+        existingConversation.participants,
+        currentSession.user.id
+      );
+      if (!userIsAuthorized) throw new GraphQLError("Not authorized");
+
+      try {
+        /* Retrieve messages from conversation and order by time of creation */
+        const allMessagesOnThisConversation = await prisma.message.findMany({
+          where: {
+            conversationId: selectedConversationId,
+          },
+          include: populatedMessage,
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+
+        /* Update the message feed of the participants */
+        return allMessagesOnThisConversation;
+      } catch (error) {
+        throw new GraphQLError("Something went wrong");
+      }
+    },
+  },
   Mutation: {
     createMessage: async (
       _: any,
@@ -84,7 +139,28 @@ export default {
       return true;
     },
   },
-  Subscription: {},
+  Subscription: {
+    messageCreation: {
+      /* This subscription is triggered every time there is an
+      event on the "MESSAGE_CREATION" channel */
+      subscribe: withFilter(
+        (_: any, __: any, { pubsub }: GraphQLContext) => {
+          return pubsub.asyncIterator(["MESSAGE_CREATION"]);
+        },
+
+        (
+          { newMessage }: MessageCreationSubscriptionPayload,
+          { selectedConversationId }: { selectedConversationId: string },
+          { currentSession }: GraphQLContext
+        ) => {
+          /* Authorization */
+          if (!currentSession?.user) throw new GraphQLError("Not authorized");
+
+          return newMessage.conversationId === selectedConversationId;
+        }
+      ),
+    },
+  },
 };
 
 /* Reusable piece of query that populates the field sender */
