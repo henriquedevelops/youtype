@@ -1,9 +1,8 @@
 import { signOut } from "next-auth/react";
-import { FunctionComponent as FC } from "react";
+import { createContext, FunctionComponent as FC } from "react";
 import { Button, Center, Flex } from "@chakra-ui/react";
 // import ConversationsController from "./controller/ConversationsController";
 import SelectedConversation from "./selected-conversation/SelectedConversation";
-import { Session } from "next-auth";
 import ConversationsController from "./controller/ConversationsController";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
@@ -12,17 +11,14 @@ import {
   GetConversationByIdData,
   QueryConversationByIdArgument,
 } from "@/src/typescriptTypes/conversation";
-
-interface ChatProps {
-  currentSession: Session;
-}
+import { SelectedConversationContext } from "@/src/util/context";
 
 /* 
 Component that contains the entire chat.
 (Rendered when user is logged in)
 */
 
-const EntireChat: FC<ChatProps> = () => {
+const EntireChat: FC = () => {
   /* Verifying if there is a selected conversation */
   const selectedConversationId = useRouter().query
     .selectedConversationId as string;
@@ -37,8 +33,10 @@ const EntireChat: FC<ChatProps> = () => {
 
   return (
     <Flex height="100vh">
-      <ConversationsController />
-      <SelectedConversation selectedConversation={selectedConversation} />
+      <SelectedConversationContext.Provider value={{ selectedConversation }}>
+        <ConversationsController />
+        <SelectedConversation />
+      </SelectedConversationContext.Provider>
     </Flex>
   );
 };

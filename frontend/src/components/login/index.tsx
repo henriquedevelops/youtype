@@ -1,4 +1,4 @@
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { FunctionComponent as FC, useState } from "react";
 import { Button, Center, Stack, Text, Image, Input } from "@chakra-ui/react";
 import { useMutation } from "@apollo/client";
@@ -12,14 +12,22 @@ import {
 } from "@/src/typescriptTypes/users";
 
 /* Component that contains the login functionality */
-const Login: FC<LoginProps> = ({ currentSession, reloadSession }) => {
+const Login: FC<LoginProps> = () => {
   const [inputUsername, setInputUsername] = useState("");
+
+  const { data: currentSession } = useSession();
 
   /* Creating the function that triggers the username mutation */
   const [saveUsername, { loading, error }] = useMutation<
     DataSaveUsername,
     argumentSaveUsername
   >(userOperations.Mutations.saveUsernameGQL);
+
+  /* Automatically refetching the page after a user update */
+  const reloadSession = () => {
+    const event = new Event("visibilitychange");
+    document.dispatchEvent(event);
+  };
 
   /* Handler for "onClick" in the save username button */
   const handleSaveUsername = async () => {

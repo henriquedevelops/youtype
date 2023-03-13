@@ -1,14 +1,16 @@
 import { HeaderProps } from "@/src/typescriptTypes/conversation";
+import { SelectedConversationContext } from "@/src/util/context";
 import { formatParticipantsUsernames } from "@/src/util/util";
 import { Button, Icon, Stack, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { FunctionComponent as FC } from "react";
+import { FunctionComponent as FC, useContext } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
-export const Header: FC<HeaderProps> = ({ selectedConversation }) => {
+export const Header: FC<HeaderProps> = () => {
   const loggedUserId = useSession().data?.user.id;
   const nextRouter = useRouter();
+  const { selectedConversation } = useContext(SelectedConversationContext);
 
   return (
     <Stack

@@ -41,7 +41,4 @@ export interface UserFound {
 }
 
 /* Structure of the Login component props */
-export interface LoginProps {
-  currentSession: Session | null;
-  reloadSession: () => void;
-}
+export interface LoginProps {}

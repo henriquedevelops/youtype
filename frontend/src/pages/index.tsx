@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import type { NextPage as Page, NextPageContext } from "next";
+import { Session } from "next-auth";
 import { getSession, useSession } from "next-auth/react";
 import EntireChat from "../components/chat/EntireChat";
 import Login from "../components/login";
@@ -17,26 +18,15 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
+interface HomeProps {
+  currentSession: Session | null;
+}
+
 /* Main page component */
-const Home: Page = () => {
-  /* Extracting current session information from props */
-  const { data: currentSession } = useSession();
-
-  /* Automatically refetching the page after a user update */
-  const reloadSession = () => {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
-  };
-
+const Home: Page<HomeProps> = ({ currentSession }) => {
   /* If user is logged in send him to chat, if not, send him to login */
   return (
-    <Box>
-      {currentSession?.user?.username ? (
-        <EntireChat currentSession={currentSession} />
-      ) : (
-        <Login currentSession={currentSession} reloadSession={reloadSession} />
-      )}
-    </Box>
+    <Box>{currentSession?.user?.username ? <EntireChat /> : <Login />}</Box>
   );
 };
 
