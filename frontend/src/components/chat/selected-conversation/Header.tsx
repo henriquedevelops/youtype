@@ -1,4 +1,4 @@
-import { HeaderMessagePanelProps } from "@/src/typescriptTypes/conversation";
+import { HeaderProps } from "@/src/typescriptTypes/conversation";
 import { formatParticipantsUsernames } from "@/src/util/util";
 import { Button, Icon, Stack, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -6,9 +6,7 @@ import { useRouter } from "next/router";
 import { FunctionComponent as FC } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
-export const HeaderMessagePanel: FC<HeaderMessagePanelProps> = ({
-  selectedConversation,
-}) => {
+export const Header: FC<HeaderProps> = ({ selectedConversation }) => {
   const loggedUserId = useSession().data?.user.id;
   const nextRouter = useRouter();
 

@@ -80,6 +80,6 @@ export interface GetConversationByIdData {
   getConversationById: PopulatedConversation;
 }
 
-export interface HeaderMessagePanelProps {
+export interface HeaderProps {
   selectedConversation: PopulatedConversation;
 }

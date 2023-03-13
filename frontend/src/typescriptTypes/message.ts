@@ -1,3 +1,3 @@
-export interface InputMessageFieldProps {}
+export interface MessageInputFieldProps {}
 
-export interface FeedMessageProps {}
+export interface MessagesFeedProps {}
