@@ -23,7 +23,7 @@ import { useSession } from "next-auth/react";
 interface ConversationItemProps {
   conversation: PopulatedConversation;
   isSelected: boolean;
-  onClick: (selectedConversationId: string) => Promise<void>;
+  handleSelectConversation: (selectedConversationId: string) => Promise<void>;
 }
 
 /* 
@@ -34,6 +34,7 @@ the list of conversations and can be selected by the user
 const ConversationItem: FC<ConversationItemProps> = ({
   conversation,
   isSelected,
+  handleSelectConversation,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const loggedUserId = useSession().data?.user.id;
@@ -49,6 +50,7 @@ const ConversationItem: FC<ConversationItemProps> = ({
       bg={isSelected ? "whiteAlpha.100" : "none"}
       _hover={{ bg: "whiteAlpha.100" }}
       position="relative"
+      onClick={() => handleSelectConversation(conversation.id)}
     >
       <Avatar />
       <Flex justify="space-between" width="80%" height="100%">

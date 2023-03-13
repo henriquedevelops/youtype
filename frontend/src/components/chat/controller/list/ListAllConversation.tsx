@@ -80,7 +80,7 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
             isSelected={item.id === selectedConversationId}
             key={item.id}
             conversation={item}
-            onClick={() => handleSelectConversation(item.id)}
+            handleSelectConversation={handleSelectConversation}
           />
         ))
       )}
