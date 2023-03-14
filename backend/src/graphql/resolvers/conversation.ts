@@ -33,7 +33,7 @@ export default {
           },
 
           /* Populating the fields "participants" and "latestMessage" */
-          include: populateParticipantsAndLatestMessage,
+          include: populatedConversation,
         });
 
         /* Send array of populated conversations to the client */
@@ -65,7 +65,7 @@ export default {
           where: {
             id: selectedConversationId,
           },
-          include: populateParticipantsAndLatestMessage,
+          include: populatedConversation,
         });
 
         if (!conversationFound)
@@ -109,7 +109,6 @@ export default {
              of the participants in this new conversation */
             participants: {
               createMany: {
-                /* Converting the array of id strings into an array of objects */
                 data: participantsIds.map((id) => ({
                   userId: id,
                   hasSeenLatestMessage: id === currentSession.user.id,
@@ -121,7 +120,7 @@ export default {
           /* This "include" specifies the fields that shall be populated on this 
           "newConversation" object that is returned from the 
           prisma.conversation.create() */
-          include: populateParticipantsAndLatestMessage,
+          include: populatedConversation,
         });
 
         /* Update conversation lists of the participants in
@@ -172,7 +171,7 @@ export default {
 
 /* Reusable piece of query that populates the fields "participants"
  and "latestMessage" in the queried conversation */
-export const populateParticipants =
+export const populatedParticipants =
   Prisma.validator<Prisma.ConversationParticipantInclude>()({
     user: {
       select: {
@@ -182,10 +181,10 @@ export const populateParticipants =
     },
   });
 
-export const populateParticipantsAndLatestMessage =
+export const populatedConversation =
   Prisma.validator<Prisma.ConversationInclude>()({
     participants: {
-      include: populateParticipants,
+      include: populatedParticipants,
     },
     latestMessage: {
       include: {

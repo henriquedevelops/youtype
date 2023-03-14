@@ -8,7 +8,7 @@ import {
 } from "../../typescriptTypes/message";
 import { GraphQLContext } from "../../typescriptTypes/server";
 import { verifyConversationParticipant } from "../../util/util";
-import { populateParticipantsAndLatestMessage } from "./conversation";
+import { populatedConversation } from "./conversation";
 
 export default {
   Query: {
@@ -31,7 +31,7 @@ export default {
         where: {
           id: selectedConversationId,
         },
-        include: populateParticipantsAndLatestMessage,
+        include: populatedConversation,
       });
       if (!existingConversation)
         throw new GraphQLError("Conversation not found");
@@ -68,12 +68,7 @@ export default {
       _: any,
 
       /* Extracting new message data from input */
-      {
-        messageId,
-        selectedConversationId,
-        senderId,
-        messageBody,
-      }: ArgumentsCreateMessage,
+      { selectedConversationId, senderId, messageBody }: ArgumentsCreateMessage,
 
       /* Extracting prisma and session from Apollo context */
       { currentSession, prisma, pubsub }: GraphQLContext
@@ -89,7 +84,6 @@ export default {
         /* Create new message document on the database */
         const newMessage = await prisma.message.create({
           data: {
-            id: messageId,
             senderId,
             conversationId: selectedConversationId,
             body: messageBody,
@@ -104,30 +98,31 @@ export default {
           },
           data: {
             latestMessageId: newMessage.id,
+          },
+          include: populatedConversation,
+        });
 
-            /* Update sender "hasSeenLatestMessage" to true */
-            participants: {
-              update: {
-                where: {
-                  id: senderId,
-                },
-                data: {
-                  hasSeenLatestMessage: true,
-                },
-              },
+        /* Update sender "hasSeenLatestMessage" to true */
+        await prisma.conversationParticipant.updateMany({
+          where: {
+            userId: senderId,
+            conversationId: selectedConversationId,
+          },
+          data: {
+            hasSeenLatestMessage: true,
+          },
+        });
 
-              /* Update receivers "hasSeenLatestMessage" to false */
-              updateMany: {
-                where: {
-                  NOT: {
-                    userId: senderId,
-                  },
-                },
-                data: {
-                  hasSeenLatestMessage: false,
-                },
-              },
+        /* Update receivers "hasSeenLatestMessage" to false */
+        await prisma.conversationParticipant.updateMany({
+          where: {
+            userId: {
+              not: senderId,
             },
+            conversationId: selectedConversationId,
+          },
+          data: {
+            hasSeenLatestMessage: false,
           },
         });
 

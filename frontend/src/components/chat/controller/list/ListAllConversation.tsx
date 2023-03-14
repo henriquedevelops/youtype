@@ -51,7 +51,6 @@ const ListAllConversations: FC<ListAllConversationsProps> = ({
           />
         ))
       )}
-      ;
     </>
   );
 };

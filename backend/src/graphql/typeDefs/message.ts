@@ -14,7 +14,6 @@ export default gql`
 
   type Mutation {
     createMessage(
-      messageId: String
       selectedConversationId: String
       senderId: String
       messageBody: String

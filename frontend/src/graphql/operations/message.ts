@@ -23,13 +23,11 @@ export default {
   Mutation: {
     createMessage: gql`
       mutation (
-        $messageId: String!
         $selectedConversationId: String!
         $senderId: String!
         $messageBody: String!
       ) {
         createMessage(
-          messageId: $messageId
           selectedConversationId: $selectedConversationId
           senderId: $senderId
           messageBody: $messageBody

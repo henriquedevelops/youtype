@@ -14,3 +14,13 @@ export interface getAllMessagesData {
 export interface GetAllMessagesArgument {
   selectedConversationId: string | undefined;
 }
+
+export interface ArgumentsCreateMessage {
+  selectedConversationId: string;
+  senderId: string;
+  messageBody: string;
+}
+
+export interface CreateMessageReturn {
+  createMessage: boolean;
+}

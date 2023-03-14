@@ -25,6 +25,7 @@ const Chat: FC<ChatProps> = () => {
   const {
     data: getAllMessagesData,
     loading: isLoadingMessages,
+    error: errorLoadingMessages,
     subscribeToMore,
   } = useQuery<getAllMessagesData, GetAllMessagesArgument>(
     MessageOperations.Query.getAllMessages,
@@ -37,6 +38,8 @@ const Chat: FC<ChatProps> = () => {
       },
     }
   );
+  if (errorLoadingMessages) return null;
+
   const allMessages = getAllMessagesData?.getAllMessages;
 
   return (
