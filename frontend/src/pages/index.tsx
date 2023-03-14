@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import type { NextPage as Page, NextPageContext } from "next";
-import { Session } from "next-auth";
-import { getSession, useSession } from "next-auth/react";
-import EntireChat from "../components/chat/EntireChat";
-import Login from "../components/login";
+import { getSession } from "next-auth/react";
+import MainPage from "../components/chat/MainPage";
+import Login from "../components/login/Login";
+import { HomeProps } from "../typescriptTypes/props";
 
 /* Server-side rendering */
 export async function getServerSideProps(context: NextPageContext) {
@@ -18,16 +18,9 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
-interface HomeProps {
-  currentSession: Session | null;
-}
-
-/* Main page component */
+/* If user is logged in send him to chat, if not, send him to login */
 const Home: Page<HomeProps> = ({ currentSession }) => {
-  /* If user is logged in send him to chat, if not, send him to login */
-  return (
-    <Box>{currentSession?.user?.username ? <EntireChat /> : <Login />}</Box>
-  );
+  return <Box>{currentSession?.user?.username ? <MainPage /> : <Login />}</Box>;
 };
 
 export default Home;

@@ -6,5 +6,7 @@ export function verifyConversationParticipant(
   participants: Array<PopulatedParticipant>,
   currentUserId: string
 ): boolean {
-  return !!participants.find((participant) => participant.id === currentUserId);
+  return !!participants.find(
+    (participant) => participant.user.id === currentUserId
+  );
 }

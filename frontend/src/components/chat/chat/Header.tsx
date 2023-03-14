@@ -1,16 +1,39 @@
-import { HeaderProps } from "@/src/typescriptTypes/conversation";
-import { SelectedConversationContext } from "@/src/util/context";
+import { HeaderProps } from "@/src/typescriptTypes/props";
+import { SelectedConversationContext } from "@/src/util/util";
 import { formatParticipantsUsernames } from "@/src/util/util";
+import { useQuery } from "@apollo/client";
 import { Button, Icon, Stack, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { FunctionComponent as FC, useContext } from "react";
 import { FaArrowLeft } from "react-icons/fa";
+import {
+  GetConversationByIdData,
+  QueryConversationByIdArgument,
+} from "@/src/typescriptTypes/conversation";
+import conversationsOperations from "@/src/graphql/operations/conversation";
+import toast from "react-hot-toast";
 
 export const Header: FC<HeaderProps> = () => {
   const loggedUserId = useSession().data?.user.id;
   const nextRouter = useRouter();
-  const { selectedConversation } = useContext(SelectedConversationContext);
+  const selectedConversationId = useContext(
+    SelectedConversationContext
+  ) as string;
+  const {
+    data: GetConversationByIdData,
+    loading: isLoadingGetConversationById,
+  } = useQuery<GetConversationByIdData, QueryConversationByIdArgument>(
+    conversationsOperations.Queries.getConversationById,
+    {
+      variables: { selectedConversationId },
+      onError: ({ message }) => {
+        toast.error(message);
+      },
+    }
+  );
+
+  const selectedConversation = GetConversationByIdData?.getConversationById;
 
   return (
     <Stack
@@ -32,6 +55,7 @@ export const Header: FC<HeaderProps> = () => {
       >
         <Icon as={FaArrowLeft} />
       </Button>
+
       {selectedConversation && loggedUserId && (
         <Stack direction="row">
           <Text color="whiteAlpha.600">To: </Text>

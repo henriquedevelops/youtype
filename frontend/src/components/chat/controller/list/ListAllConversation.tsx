@@ -5,9 +5,11 @@ import {
   PopulatedConversation,
 } from "@/src/typescriptTypes/conversation";
 import { useQuery } from "@apollo/client";
+import { Skeleton, SkeletonCircle } from "@chakra-ui/react";
 import { Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FunctionComponent as FC, useEffect } from "react";
+import toast from "react-hot-toast";
 import ConversationItem from "./ConversationItem";
 
 interface ListAllConversationsProps {}
@@ -23,10 +25,14 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
   const {
     data: getAllConversationsData,
     loading: isLoadingConversations,
-    error: errorLoadingConversations,
     subscribeToMore,
   } = useQuery<getAllConversationData, never>(
-    conversationsOperations.Queries.getAllConversations
+    conversationsOperations.Queries.getAllConversations,
+    {
+      onError: ({ message }) => {
+        toast.error(message);
+      },
+    }
   );
 
   /* Execute subscription to new conversations when mounting the component */
@@ -72,8 +78,17 @@ const ListAllConversations: FC<ListAllConversationsProps> = () => {
 
   return (
     <>
-      {!getAllConversationsData?.getAllConversations ? (
-        <Flex>no conversations yet</Flex>
+      {isLoadingConversations ? (
+        <Skeleton
+          variant="rect"
+          width="100%"
+          height="100%"
+          borderRadius={7}
+          startColor="blackAlpha.400"
+          endColor="whiteAlpha.200"
+        />
+      ) : !getAllConversationsData?.getAllConversations ? (
+        <Flex>No conversations Found</Flex>
       ) : (
         getAllConversationsData?.getAllConversations.map((item) => (
           <ConversationItem

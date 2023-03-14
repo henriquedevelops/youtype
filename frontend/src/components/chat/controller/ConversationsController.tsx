@@ -1,5 +1,5 @@
 import { PopulatedConversation } from "@/src/typescriptTypes/conversation";
-import { SelectedConversationContext } from "@/src/util/context";
+import { SelectedConversationContext } from "@/src/util/util";
 import { Box } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -16,11 +16,11 @@ authenticated user (from which he can choose the current conversation).
 */
 
 const ConversationsController: FC<ConversationsControllerProps> = () => {
-  const { selectedConversation } = useContext(SelectedConversationContext);
+  const selectedConversationId = useContext(SelectedConversationContext);
 
   return (
     <Box
-      display={{ base: selectedConversation ? "none" : "block", md: "block" }}
+      display={{ base: selectedConversationId ? "none" : "block", md: "block" }}
       width={{ base: "100%", md: "400px" }}
       bg="whiteAlpha.50"
       py={6}

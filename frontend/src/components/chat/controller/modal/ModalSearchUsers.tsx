@@ -52,7 +52,12 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
     triggerSearchUsersQuery,
     { data: dataSearchUsers, loading: loadingSearchUsers },
   ] = useLazyQuery<SearchUsersResult, SearchUsersInput>(
-    userOperations.Queries.searchUsers
+    userOperations.Queries.searchUsers,
+    {
+      onError: ({ message }) => {
+        toast.error(message);
+      },
+    }
   );
 
   /* Executing useMutation hook on "createConversation" mutation */
@@ -60,7 +65,12 @@ const ModalSearchUsers: FC<ModalSearchUsersProps> = ({
     triggerCreateConversationMutation,
     { loading: loadingCreateConversation },
   ] = useMutation<CreateConversationData, CreateConversationInput>(
-    ConversationsOperations.Mutations.createConversation
+    ConversationsOperations.Mutations.createConversation,
+    {
+      onError: ({ message }) => {
+        toast.error(message);
+      },
+    }
   );
 
   /* Next.JS router hook to push the conversation id into the URI query

@@ -1,3 +1,4 @@
+import { createContext } from "react";
 import { PopulatedParticipant } from "../typescriptTypes/conversation";
 
 /* Generates a string that contains the username of the conversation 
@@ -19,3 +20,7 @@ export const formatRelativeLocale = {
   today: "p",
   other: "MM/dd/yy",
 };
+
+export const SelectedConversationContext = createContext<string | undefined>(
+  undefined
+);

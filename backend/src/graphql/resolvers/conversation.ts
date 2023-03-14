@@ -47,12 +47,17 @@ export default {
       _: any,
 
       /* Extracting selected conversation id from input */
-      { selectedConversationId }: { selectedConversationId: string },
+      {
+        selectedConversationId = undefined,
+      }: { selectedConversationId: string | undefined },
 
       /* Extracting prisma and session from Apollo context */
       { currentSession, prisma }: GraphQLContext
-    ): Promise<PopulatedConversation> => {
+    ): Promise<PopulatedConversation | null> => {
       if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
+      if (!selectedConversationId) {
+        return null;
+      }
 
       try {
         /* Fetch conversation by ID and populate the fields "participants" and "latestMessage" */

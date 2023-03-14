@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { populatedMessageFields } from "./message";
 
 /* The gql function is used to parse the GraphQL code into
 a synthax that can be interpreted by the Apollo client to 
@@ -16,13 +17,7 @@ const populatedConversationFields = `
     hasSeenLatestMessage
   }
   latestMessage {
-    id
-    sender {
-      id
-      username
-    }
-    body
-    createdAt
+    ${populatedMessageFields}
   }
   updatedAt`;
 
@@ -34,7 +29,7 @@ export default {
       query { getAllConversations {${populatedConversationFields}}}
     `,
     getConversationById: gql`
-      query ($selectedConversationId: String!) {
+      query ($selectedConversationId: String) {
         getConversationById(selectedConversationId: $selectedConversationId) {${populatedConversationFields}}
       }
     `,

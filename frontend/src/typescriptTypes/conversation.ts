@@ -80,8 +80,6 @@ export interface GetConversationByIdData {
   getConversationById: PopulatedConversation;
 }
 
-export interface HeaderProps {}
-
 export interface SelectedConversationContextType {
-  selectedConversation: PopulatedConversation | undefined;
+  selectedConversationId: string;
 }

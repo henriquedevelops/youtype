@@ -21,7 +21,11 @@ const Login: FC<LoginProps> = () => {
   const [saveUsername, { loading, error }] = useMutation<
     DataSaveUsername,
     argumentSaveUsername
-  >(userOperations.Mutations.saveUsernameGQL);
+  >(userOperations.Mutations.saveUsernameGQL, {
+    onError: ({ message }) => {
+      toast.error(message);
+    },
+  });
 
   /* Automatically refetching the page after a user update */
   const reloadSession = () => {

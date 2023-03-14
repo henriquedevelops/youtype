@@ -16,14 +16,16 @@ export default {
       _: any,
 
       /* Extracting from input */
-      { selectedConversationId }: { selectedConversationId: string },
+      {
+        selectedConversationId,
+      }: { selectedConversationId: string | undefined },
 
       /* Extracting from Apollo context */
       { currentSession, prisma, pubsub }: GraphQLContext
-    ): Promise<Array<PopulatedMessage>> => {
+    ): Promise<Array<PopulatedMessage> | null> => {
       /* Requering login */
       if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
-
+      if (!selectedConversationId) return null;
       /* Validating conversation id */
       const existingConversation = await prisma.conversation.findUnique({
         where: {
@@ -39,7 +41,8 @@ export default {
         existingConversation.participants,
         currentSession.user.id
       );
-      if (!userIsAuthorized) throw new GraphQLError("Not authorized");
+
+      if (!userIsAuthorized) throw new GraphQLError("Not authorized!!!");
 
       try {
         /* Retrieve messages from conversation and order by time of creation */

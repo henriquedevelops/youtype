@@ -1,4 +1,4 @@
-import { MessageInputFieldProps } from "@/src/typescriptTypes/message";
+import { MessageInputFieldProps } from "@/src/typescriptTypes/props";
 import { Box, Input } from "@chakra-ui/react";
 import { FunctionComponent as FC, useState, FormEvent } from "react";
 import { toast } from "react-hot-toast";
