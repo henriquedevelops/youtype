@@ -66,7 +66,7 @@ export interface getAllConversationData {
 
 /* Structure of the data that is received as argument by
 subscribeToMore function in the conversation creation subscription  */
-export interface newValueUpdateQuery {
+export interface newValueUpdateConversationQuery {
   subscriptionData: {
     data: { conversationCreation: PopulatedConversation };
   };

@@ -1,7 +1,6 @@
 import conversationsOperations from "@/src/graphql/operations/conversation";
 import {
   getAllConversationData,
-  newValueUpdateQuery,
   PopulatedConversation,
 } from "@/src/typescriptTypes/conversation";
 import { useQuery } from "@apollo/client";

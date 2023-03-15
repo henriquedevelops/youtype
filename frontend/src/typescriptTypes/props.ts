@@ -9,6 +9,7 @@ export interface MessageInputFieldProps {}
 
 export interface MessagesFeedProps {
   allMessages: Message[] | undefined;
+  subscribeToNewMessages: (selectedConversationId: string) => void;
 }
 
 export interface ChatProps {}

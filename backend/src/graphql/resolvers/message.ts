@@ -128,8 +128,8 @@ export default {
 
         /* Update message feeds of the participants in
          real-time */
-        pubsub.publish("MESSAGE_CREATED", newMessage);
-        pubsub.publish("CONVERSATION_UPDATED", updatedConversation);
+        pubsub.publish("MESSAGE_CREATION", { messageCreation: newMessage });
+        // pubsub.publish("CONVERSATION_UPDATED", updatedConversation);
       } catch (error) {
         throw new GraphQLError("Error creating message");
       }
@@ -147,14 +147,14 @@ export default {
         },
 
         (
-          { newMessage }: MessageCreationSubscriptionPayload,
+          { messageCreation }: MessageCreationSubscriptionPayload,
           { selectedConversationId }: { selectedConversationId: string },
           { currentSession }: GraphQLContext
         ) => {
           /* Authorization */
           if (!currentSession?.user) throw new GraphQLError("Not authorized");
 
-          return newMessage.conversationId === selectedConversationId;
+          return messageCreation.conversationId === selectedConversationId;
         }
       ),
     },

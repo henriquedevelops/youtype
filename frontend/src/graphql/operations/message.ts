@@ -20,6 +20,7 @@ export default {
         }
         `,
   },
+
   Mutation: {
     createMessage: gql`
       mutation (
@@ -35,7 +36,8 @@ export default {
       }
     `,
   },
-  Subscription: {
+
+  Subscriptions: {
     messageCreation: gql`
       subscription ($selectedConversationId: String!) {
         messageCreation(selectedConversationId: $selectedConversationId){

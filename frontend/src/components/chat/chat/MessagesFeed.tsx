@@ -16,8 +16,17 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 
-export const MessagesFeed: FC<MessagesFeedProps> = ({ allMessages }) => {
-  const selectedConversationId = useContext(SelectedConversationContext);
+export const MessagesFeed: FC<MessagesFeedProps> = ({
+  allMessages,
+  subscribeToNewMessages,
+}) => {
+  const selectedConversationId = useContext(
+    SelectedConversationContext
+  ) as string;
+
+  useEffect(() => {
+    subscribeToNewMessages(selectedConversationId);
+  }, [selectedConversationId]);
 
   return (
     <>

@@ -12,5 +12,5 @@ export type PopulatedMessage = Prisma.MessageGetPayload<{
 }>;
 
 export interface MessageCreationSubscriptionPayload {
-  newMessage: PopulatedMessage;
+  messageCreation: PopulatedMessage;
 }

@@ -24,3 +24,11 @@ export interface ArgumentsCreateMessage {
 export interface CreateMessageReturn {
   createMessage: boolean;
 }
+
+export interface MessageSubscriptionData {
+  subscriptionData: {
+    data: {
+      messageCreation: Message;
+    };
+  };
+}

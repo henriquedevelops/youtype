@@ -1,6 +1,6 @@
 import {
   getAllConversationData,
-  newValueUpdateQuery,
+  newValueUpdateConversationQuery,
   PopulatedConversation,
 } from "@/src/typescriptTypes/conversation";
 import { SelectedConversationContext } from "@/src/util/util";
@@ -48,14 +48,16 @@ const ConversationsController: FC<ConversationsControllerProps> = () => {
   const subscribeToNewConversations = () => {
     subscribeToMore({
       document: conversationsOperations.Subscriptions.conversationCreation,
+
+      /* "getAllConversationsData" will be updated with the value returned
+        from this function (which includes the new conversation when there 
+        is one) */
       updateQuery: (
         previousValue,
-        { subscriptionData: newValue }: newValueUpdateQuery
+        { subscriptionData: newValue }: newValueUpdateConversationQuery
       ) => {
         if (!newValue) return previousValue;
 
-        /* "getAllConversationsData" will be updated with the value returned
-          here (which includes the new conversation when there is one) */
         return Object.assign({}, previousValue, {
           getAllConversations: [
             newValue.data.conversationCreation,
