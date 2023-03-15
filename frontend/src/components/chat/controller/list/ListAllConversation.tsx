@@ -1,14 +1,7 @@
-import conversationsOperations from "@/src/graphql/operations/conversation";
-import {
-  getAllConversationData,
-  PopulatedConversation,
-} from "@/src/typescriptTypes/conversation";
-import { useQuery } from "@apollo/client";
-import { Skeleton, SkeletonCircle } from "@chakra-ui/react";
+import { getAllConversationData } from "@/src/typescriptTypes/conversation";
 import { Flex } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { FunctionComponent as FC, useEffect } from "react";
-import toast from "react-hot-toast";
+import { FunctionComponent as FC } from "react";
 import ConversationItem from "./ConversationItem";
 
 interface ListAllConversationsProps {

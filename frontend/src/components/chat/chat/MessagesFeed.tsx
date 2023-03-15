@@ -1,42 +1,28 @@
-import MessageOperations from "@/src/graphql/operations/message";
-import {
-  GetAllMessagesArgument,
-  getAllMessagesData,
-} from "@/src/typescriptTypes/message";
 import { MessagesFeedProps } from "@/src/typescriptTypes/props";
 import { SelectedConversationContext } from "@/src/util/util";
-import { useQuery } from "@apollo/client";
 import { Flex } from "@chakra-ui/react";
-import {
-  Dispatch,
-  FunctionComponent as FC,
-  SetStateAction,
-  useContext,
-  useEffect,
-} from "react";
-import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { FunctionComponent as FC, useContext } from "react";
+import { MessageItem } from "./MessageItem";
 
 export const MessagesFeed: FC<MessagesFeedProps> = ({
-  allMessages,
-  subscribeToNewMessages,
+  allMessagesFromThisConversation,
 }) => {
   const selectedConversationId = useContext(
     SelectedConversationContext
   ) as string;
-
-  useEffect(() => {
-    subscribeToNewMessages(selectedConversationId);
-  }, [selectedConversationId]);
+  const { data: currentSession } = useSession();
 
   return (
-    <>
-      {allMessages && (
-        <Flex direction="column" justify="flex-end" overflow="hidden">
-          {allMessages?.map((message) => (
-            <div>{message.body}</div>
-          ))}
-        </Flex>
-      )}
-    </>
+    <Flex direction="column-reverse" overflowY="scroll" height="100%">
+      {allMessagesFromThisConversation &&
+        allMessagesFromThisConversation.map((message) => (
+          <MessageItem
+            key={message.id}
+            message={message}
+            wasSentByCurrentUser={message.sender.id === currentSession?.user.id}
+          />
+        ))}
+    </Flex>
   );
 };

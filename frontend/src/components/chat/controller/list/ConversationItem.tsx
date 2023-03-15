@@ -1,24 +1,13 @@
 import { PopulatedConversation } from "@/src/typescriptTypes/conversation";
 import {
-  Avatar,
-  Box,
-  Flex,
-  Menu,
-  MenuItem,
-  MenuList,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { formatRelative } from "date-fns";
-import enUS from "date-fns/locale/en-US";
-import { FunctionComponent as FC, useState } from "react";
-import { MdDeleteOutline } from "react-icons/md";
-import { AiOutlineEdit } from "react-icons/ai";
-import {
   formatParticipantsUsernames,
   formatRelativeLocale,
 } from "@/src/util/util";
+import { Avatar, Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { formatRelative } from "date-fns";
+import enUS from "date-fns/locale/en-US";
 import { useSession } from "next-auth/react";
+import { FunctionComponent as FC, useState } from "react";
 
 interface ConversationItemProps {
   conversation: PopulatedConversation;

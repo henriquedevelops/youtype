@@ -1,4 +1,16 @@
-import { ApolloError, useLazyQuery, useMutation } from "@apollo/client";
+import ConversationsOperations from "@/src/graphql/operations/conversation";
+import userOperations from "@/src/graphql/operations/user";
+import {
+  CreateConversationData,
+  CreateConversationInput,
+} from "@/src/typescriptTypes/conversation";
+import {
+  ModalSearchUsersProps,
+  SearchUsersInput,
+  SearchUsersResult,
+  UserFound,
+} from "@/src/typescriptTypes/users";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   Button,
   Input,
@@ -10,24 +22,11 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 import { FormEvent, FunctionComponent as FC, useState } from "react";
-import userOperations from "@/src/graphql/operations/user";
+import { toast } from "react-hot-toast";
 import SearchResults from "./SearchResults";
 import SelectedList from "./SelectedList";
-import { toast } from "react-hot-toast";
-import ConversationsOperations from "@/src/graphql/operations/conversation";
-import {
-  CreateConversationData,
-  CreateConversationInput,
-} from "@/src/typescriptTypes/conversation";
-import {
-  ModalSearchUsersProps,
-  SearchUsersInput,
-  SearchUsersResult,
-  UserFound,
-} from "@/src/typescriptTypes/users";
-import { useRouter } from "next/router";
 
 /* 
 This modal is rendered when the user clicks on the button 

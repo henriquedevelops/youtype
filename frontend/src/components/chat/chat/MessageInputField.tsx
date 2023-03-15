@@ -21,28 +21,27 @@ export const MessageInputField: FC<MessageInputFieldProps> = () => {
   const selectedConversationId = useRouter().query
     .selectedConversationId as string;
   const { data: currentSession } = useSession();
-  const [triggerCreateMessageMutation, { data: createMessageData }] =
-    useMutation<CreateMessageReturn, ArgumentsCreateMessage>(
-      MessageOperations.Mutation.createMessage,
-      {
-        onError: (error) => {
-          console.log(error);
+  const [triggerCreateMessageMutation, {}] = useMutation<
+    CreateMessageReturn,
+    ArgumentsCreateMessage
+  >(MessageOperations.Mutation.createMessage, {
+    onError: (error) => {
+      console.log(error);
 
-          toast.error(error.message);
-        },
-      }
-    );
+      toast.error(error.message);
+    },
+  });
 
   /* Execute the createMessage mutation (onSubmit) */
   const handleSendMessage = async (event: FormEvent) => {
     event.preventDefault();
     try {
       if (!currentSession) return new Error("Session expired.");
-      const {} = await triggerCreateMessageMutation({
+      await triggerCreateMessageMutation({
         variables: {
           messageBody: inputMessage,
           selectedConversationId,
-          senderId: currentSession?.user.id,
+          senderId: currentSession.user.id,
         },
       });
     } catch (error: any) {

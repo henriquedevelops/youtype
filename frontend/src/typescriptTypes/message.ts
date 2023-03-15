@@ -1,4 +1,5 @@
 export interface Message {
+  id: string;
   sender: {
     id: string;
     username: string | null;
@@ -31,4 +32,9 @@ export interface MessageSubscriptionData {
       messageCreation: Message;
     };
   };
+}
+
+export interface MessageItemProps {
+  message: Message;
+  wasSentByCurrentUser: boolean;
 }

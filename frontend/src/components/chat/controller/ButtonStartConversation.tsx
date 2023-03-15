@@ -1,8 +1,5 @@
-import { signOut } from "next-auth/react";
+import { Button } from "@chakra-ui/react";
 import { FunctionComponent as FC, useState } from "react";
-import { Box, Button, Center, Flex, Text } from "@chakra-ui/react";
-import { Session } from "next-auth";
-import StartConversationModal from "./modal/ModalSearchUsers";
 import ModalSearchUsers from "./modal/ModalSearchUsers";
 
 /* 

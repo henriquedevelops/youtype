@@ -8,7 +8,7 @@ export interface HomeProps {
 export interface MessageInputFieldProps {}
 
 export interface MessagesFeedProps {
-  allMessages: Message[] | undefined;
+  allMessagesFromThisConversation: Message[] | undefined;
   subscribeToNewMessages: (selectedConversationId: string) => void;
 }
 

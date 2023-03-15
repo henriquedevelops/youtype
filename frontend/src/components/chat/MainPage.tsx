@@ -1,17 +1,9 @@
-import { signOut } from "next-auth/react";
-import { createContext, FunctionComponent as FC } from "react";
-import { Button, Center, Flex } from "@chakra-ui/react";
+import { SelectedConversationContext } from "@/src/util/util";
+import { Flex } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { FunctionComponent as FC } from "react";
 import Chat from "./chat/Chat";
 import ConversationsController from "./controller/ConversationsController";
-import { useRouter } from "next/router";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import conversationsOperations from "@/src/graphql/operations/conversation";
-import {
-  GetConversationByIdData,
-  QueryConversationByIdArgument,
-} from "@/src/typescriptTypes/conversation";
-import { SelectedConversationContext } from "@/src/util/util";
-import toast from "react-hot-toast";
 
 /* 
 This is rendered when user loggs in and it contains everything that

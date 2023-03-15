@@ -1,18 +1,15 @@
+import conversationsOperations from "@/src/graphql/operations/conversation";
 import {
   getAllConversationData,
   newValueUpdateConversationQuery,
-  PopulatedConversation,
 } from "@/src/typescriptTypes/conversation";
 import { SelectedConversationContext } from "@/src/util/util";
 import { useQuery } from "@apollo/client";
 import { Box, Skeleton } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { FunctionComponent as FC, useContext, useEffect } from "react";
+import toast from "react-hot-toast";
 import ButtonStartConversation from "./ButtonStartConversation";
 import ListAllConversation from "./list/ListAllConversation";
-import conversationsOperations from "@/src/graphql/operations/conversation";
-import toast from "react-hot-toast";
 
 interface ConversationsControllerProps {}
 

@@ -24,9 +24,7 @@ const Chat: FC<ChatProps> = () => {
   /* Querying all messages from selected conversation and 
     setting up variables for later executing the function that
     triggers the subscription to receive real-time updates */
-  const selectedConversationId = useContext(
-    SelectedConversationContext
-  ) as string;
+  const selectedConversationId = useContext(SelectedConversationContext);
   const {
     data: getAllMessagesData,
     loading: isLoadingMessages,
@@ -44,7 +42,7 @@ const Chat: FC<ChatProps> = () => {
     }
   );
   if (errorLoadingMessages) return null;
-  const allMessages = getAllMessagesData?.getAllMessages;
+  const allMessagesFromThisConversation = getAllMessagesData?.getAllMessages;
 
   /* Function that triggers the subscription to new messages */
   const subscribeToNewMessages = (selectedConversationId: string) => {
@@ -54,14 +52,13 @@ const Chat: FC<ChatProps> = () => {
         selectedConversationId,
       },
 
-      /* "allMessages" will be updated with the value returned
-      from this function (which includes the new message 
-        when there is one) */
+      /* "allMessagesFromThisCOnversation" will be updated with the 
+      value returned from this function (which includes the new message 
+      when there is one) */
       updateQuery: (
         previousMessages,
         { subscriptionData: newMessage }: MessageSubscriptionData
       ) => {
-        console.log("abdaf");
         if (!newMessage) return previousMessages;
 
         return Object.assign({}, previousMessages, {
@@ -74,7 +71,12 @@ const Chat: FC<ChatProps> = () => {
     });
   };
 
-  console.log(getAllMessagesData);
+  /* Trigger the subscription to new messages on the selected conversation
+  (everytime selectedConversationId changes) */
+
+  useEffect(() => {
+    selectedConversationId && subscribeToNewMessages(selectedConversationId);
+  }, [selectedConversationId]);
 
   return (
     <>
@@ -105,7 +107,9 @@ const Chat: FC<ChatProps> = () => {
             >
               <Header />
               <MessagesFeed
-                allMessages={allMessages}
+                allMessagesFromThisConversation={
+                  allMessagesFromThisConversation
+                }
                 subscribeToNewMessages={subscribeToNewMessages}
               />
               <MessageInputField />
