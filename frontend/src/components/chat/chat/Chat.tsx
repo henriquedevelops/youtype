@@ -2,13 +2,19 @@ import MessageOperations from "@/src/graphql/operations/message";
 import {
   GetAllMessagesArgument,
   getAllMessagesData,
+  Message,
   MessageSubscriptionData,
 } from "@/src/typescriptTypes/message";
 import { ChatProps } from "@/src/typescriptTypes/props";
 import { SelectedConversationContext } from "@/src/util/util";
 import { useQuery } from "@apollo/client";
 import { Flex, Skeleton } from "@chakra-ui/react";
-import { FunctionComponent as FC, useContext, useEffect } from "react";
+import {
+  FunctionComponent as FC,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import toast from "react-hot-toast";
 import { Header } from "./Header";
 import { MessageInputField } from "./MessageInputField";
@@ -24,6 +30,8 @@ const Chat: FC<ChatProps> = () => {
   /* Querying all messages from selected conversation and 
     setting up variables for later executing the function that
     triggers the subscription to receive real-time updates */
+  const [allMessagesFromThisConversation, setAllMessagesFromThisConversation] =
+    useState<Message[]>([]);
   const selectedConversationId = useContext(SelectedConversationContext);
   const {
     data: getAllMessagesData,
@@ -42,7 +50,19 @@ const Chat: FC<ChatProps> = () => {
     }
   );
   if (errorLoadingMessages) return null;
-  const allMessagesFromThisConversation = getAllMessagesData?.getAllMessages;
+  /*  const allMessagesFromThisConversation = getAllMessagesData?.getAllMessages; */
+
+  /* Trigger the subscription to new messages on the selected conversation
+    (everytime selectedConversationId changes) */
+
+  useEffect(() => {
+    selectedConversationId && subscribeToNewMessages(selectedConversationId);
+  }, [selectedConversationId]);
+
+  useEffect(() => {
+    getAllMessagesData?.getAllMessages &&
+      setAllMessagesFromThisConversation(getAllMessagesData.getAllMessages);
+  }, [getAllMessagesData?.getAllMessages]);
 
   /* Function that triggers the subscription to new messages */
   const subscribeToNewMessages = (selectedConversationId: string) => {
@@ -70,13 +90,6 @@ const Chat: FC<ChatProps> = () => {
       },
     });
   };
-
-  /* Trigger the subscription to new messages on the selected conversation
-  (everytime selectedConversationId changes) */
-
-  useEffect(() => {
-    selectedConversationId && subscribeToNewMessages(selectedConversationId);
-  }, [selectedConversationId]);
 
   return (
     <>
@@ -112,7 +125,14 @@ const Chat: FC<ChatProps> = () => {
                 }
                 subscribeToNewMessages={subscribeToNewMessages}
               />
-              <MessageInputField />
+              <MessageInputField
+                allMessagesFromThisConversation={
+                  allMessagesFromThisConversation
+                }
+                setAllMessagesFromThisConversation={
+                  setAllMessagesFromThisConversation
+                }
+              />
             </Flex>
           ) : (
             <Flex>Nextype Messenger</Flex>
