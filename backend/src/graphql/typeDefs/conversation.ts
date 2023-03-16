@@ -28,6 +28,7 @@ export default gql`
 
   type Mutation {
     createConversation(participantsIds: [String]): CreateConversationResponse
+    markConversationAsRead(selectedConversationId: String!): Boolean
   }
 
   type Subscription {

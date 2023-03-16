@@ -18,12 +18,10 @@ The message input (located at the bottom of the chat window)
 */
 
 export const MessageInputField: FC<MessageInputFieldProps> = ({
-  allMessagesFromThisConversation,
   setAllMessagesFromThisConversation,
 }) => {
   /* Setting up variables for later executing the createMessage mutation */
   const [newMessageBody, setNewMessageBody] = useState("");
-
   const selectedConversationId = useRouter().query
     .selectedConversationId as string;
   const { data: currentSession } = useSession();
@@ -37,7 +35,8 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
     },
   });
 
-  /* Execute the createMessage mutation (onSubmit) */
+  /* This function executes the createMessage mutation when
+   the user submit the form*/
   const handleSendMessage = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -45,7 +44,7 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
       if (!currentSession?.user?.name) return new Error("Session expired.");
 
       const optimisticMessage: Message = {
-        id: nanoid(), // Generate a temporary ID for the optimistic message
+        id: nanoid(), // Generate a temporary ID
         body: newMessageBody,
         sender: {
           id: currentSession.user.id,
@@ -54,12 +53,14 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
         createdAt: new Date(),
       };
 
-      // Add the optimistic message to the list of messages
+      /* Optmistic UI rendering */
       setAllMessagesFromThisConversation((previousMessages) => [
         optimisticMessage,
         ...previousMessages,
       ]);
 
+      /* Execute the mutation. Opmistic rendered message will be replaced
+      or removed depending on if the mutation was succesful or not */
       await triggerCreateMessageMutation({
         variables: {
           messageBody: newMessageBody,
@@ -69,9 +70,14 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
         optimisticResponse: {
           createMessage: true,
         },
+        onError: () => {
+          setAllMessagesFromThisConversation((previousMessages) => [
+            ...previousMessages.filter(
+              (message) => message.id !== optimisticMessage.id
+            ),
+          ]);
+        },
       });
-
-      // Pass the temporary ID to the mutation
     } catch (error: any) {
       toast.error(error?.message);
     }

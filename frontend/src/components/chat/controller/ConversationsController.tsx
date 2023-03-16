@@ -2,11 +2,17 @@ import conversationsOperations from "@/src/graphql/operations/conversation";
 import {
   getAllConversationData,
   newValueUpdateConversationQuery,
+  PopulatedConversation,
 } from "@/src/typescriptTypes/conversation";
 import { SelectedConversationContext } from "@/src/util/util";
 import { useQuery } from "@apollo/client";
 import { Box, Skeleton } from "@chakra-ui/react";
-import { FunctionComponent as FC, useContext, useEffect } from "react";
+import {
+  FunctionComponent as FC,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import toast from "react-hot-toast";
 import ButtonStartConversation from "./ButtonStartConversation";
 import ListAllConversation from "./list/ListAllConversation";
@@ -21,6 +27,10 @@ authenticated user (from which he can choose the current conversation).
 
 const ConversationsController: FC<ConversationsControllerProps> = () => {
   const selectedConversationId = useContext(SelectedConversationContext);
+  const [allConversations, setAllConversations] = useState<
+    PopulatedConversation[]
+  >([]);
+
   /* Query hook that fetches all conversations from currently 
   authenticated user. It is executed when the component is mounted */
   const {
@@ -40,6 +50,12 @@ const ConversationsController: FC<ConversationsControllerProps> = () => {
   useEffect(() => {
     subscribeToNewConversations();
   }, []);
+
+  /* ?? */
+  useEffect(() => {
+    getAllConversationsData?.getAllConversations &&
+      setAllConversations(getAllConversationsData.getAllConversations);
+  }, [getAllConversationsData?.getAllConversations]);
 
   /* Function responsible for updating the conversation list in real-time */
   const subscribeToNewConversations = () => {
@@ -88,9 +104,7 @@ const ConversationsController: FC<ConversationsControllerProps> = () => {
           px={3}
         >
           <ButtonStartConversation />
-          <ListAllConversation
-            getAllConversationsData={getAllConversationsData}
-          />
+          <ListAllConversation allConversations={allConversations} />
         </Box>
       )}
     </>

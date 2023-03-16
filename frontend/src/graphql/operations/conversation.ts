@@ -36,14 +36,17 @@ export default {
   },
 
   Mutations: {
-    /* Triggers the mutation called(createConversation). 
-    It takes an array of participant ids as arguments and returns
-    the Id of the newly created conversation */
     createConversation: gql`
       mutation ($participantsIds: [String]!) {
         createConversation(participantsIds: $participantsIds) {
           newConversationId
         }
+      }
+    `,
+
+    markConversationAsRead: gql`
+      mutation ($selectedConversationId: String!) {
+        markConversationAsRead(selectedConversationId: $selectedConversationId)
       }
     `,
   },

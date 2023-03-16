@@ -36,6 +36,7 @@ export default {
       }
     },
   },
+
   Mutation: {
     /* This mutation is triggered when the user logs in for the first
     time and creates a username */
@@ -47,7 +48,7 @@ export default {
 
       /* Receving current session data and prisma client from context */
       { currentSession, prisma }: GraphQLContext
-    ): Promise<SaveUsernameResponse> => {
+    ): Promise<Boolean> => {
       /* Authentication */
       if (!currentSession?.user) throw new GraphQLError("Not logged in.");
       try {
@@ -67,11 +68,9 @@ export default {
         });
 
         /* Sending success response to the user */
-        return { success: true };
+        return true;
       } catch (error: any) {
-        return {
-          error: error?.message,
-        };
+        throw new GraphQLError("Error creating user");
       }
     },
   },

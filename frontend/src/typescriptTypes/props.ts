@@ -1,5 +1,6 @@
 import { Session } from "next-auth";
 import { Dispatch, SetStateAction } from "react";
+import { getAllConversationData, PopulatedConversation } from "./conversation";
 import { Message } from "./message";
 
 export interface HomeProps {
@@ -7,15 +8,21 @@ export interface HomeProps {
 }
 
 export interface MessageInputFieldProps {
-  allMessagesFromThisConversation: Message[];
   setAllMessagesFromThisConversation: Dispatch<SetStateAction<Message[]>>;
 }
 
 export interface MessagesFeedProps {
   allMessagesFromThisConversation: Message[] | undefined;
-  subscribeToNewMessages: (selectedConversationId: string) => void;
 }
 
 export interface ChatProps {}
 
 export interface HeaderProps {}
+
+export interface ConversationItemProps {
+  conversation: PopulatedConversation;
+}
+
+export interface ListAllConversationsProps {
+  allConversations: PopulatedConversation[];
+}

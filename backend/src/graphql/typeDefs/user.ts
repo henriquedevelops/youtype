@@ -15,16 +15,11 @@ export default gql`
     username: String
   }
 
-  type SaveUsernameResponse {
-    success: Boolean
-    error: String
-  }
-
   type Query {
     searchUsers(targetUsername: String): [UserFound]
   }
 
   type Mutation {
-    saveUsernameMutation(inputUsername: String): SaveUsernameResponse
+    saveUsernameMutation(inputUsername: String): Boolean
   }
 `;

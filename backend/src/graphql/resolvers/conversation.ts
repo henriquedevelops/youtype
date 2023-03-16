@@ -60,7 +60,8 @@ export default {
       }
 
       try {
-        /* Fetch conversation by ID and populate the fields "participants" and "latestMessage" */
+        /* Fetch conversation by ID and populate the fields "participants"
+         and "latestMessage" */
         const conversationFound = await prisma.conversation.findUnique({
           where: {
             id: selectedConversationId,
@@ -98,7 +99,8 @@ export default {
       { currentSession, prisma, pubsub }: GraphQLContext
     ): Promise<{ newConversationId: string }> => {
       if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
-      /* Insert currently authenticated user into the conversation he is creating */
+      /* Insert currently authenticated user into the conversation he
+       is creating */
       participantsIds.push(currentSession?.user.id);
 
       try {
@@ -117,8 +119,8 @@ export default {
             },
           },
 
-          /* This "include" specifies the fields that shall be populated on this 
-          "newConversation" object that is returned from the 
+          /* This "include" specifies the fields that shall be populated
+           on this "newConversation" object that is returned from the 
           prisma.conversation.create() */
           include: populatedConversation,
         });
@@ -134,6 +136,35 @@ export default {
       } catch (error) {
         console.log(error);
         throw new GraphQLError("Error creating conversation");
+      }
+    },
+
+    markConversationAsRead: async (
+      _: any,
+      /* Extracting selected conversation id from arguments */
+      { selectedConversationId }: { selectedConversationId: string },
+
+      /* Extracting current session data and pubsub client 
+      from Apollo context */
+      { currentSession, prisma }: GraphQLContext
+    ): Promise<boolean> => {
+      if (!currentSession?.user) throw new GraphQLError("Not authorized");
+
+      try {
+        await prisma.conversationParticipant.updateMany({
+          where: {
+            userId: currentSession.user.id,
+            conversationId: selectedConversationId,
+          },
+          data: {
+            hasSeenLatestMessage: true,
+          },
+        });
+
+        return true;
+      } catch (error: any) {
+        console.log(error);
+        throw new GraphQLError(error.message);
       }
     },
   },

@@ -25,10 +25,7 @@ export default {
     returns an object with two fields: "success" and "error". */
     saveUsernameGQL: gql`
       mutation ($inputUsername: String!) {
-        saveUsernameMutation(inputUsername: $inputUsername) {
-          success
-          error
-        }
+        saveUsernameMutation(inputUsername: $inputUsername)
       }
     `,
   },

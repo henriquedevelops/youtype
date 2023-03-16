@@ -21,14 +21,14 @@ import { MessageInputField } from "./MessageInputField";
 import { MessagesFeed } from "./MessagesFeed";
 
 /* 
-Component that contains the header with the name selected
-conversation participants, the feed with messages sent/received, 
+Component that contains the header with the name of the participants
+from selected conversation, the feed with messages sent/received, 
 and the input field where the user types a new message
 */
 
 const Chat: FC<ChatProps> = () => {
-  /* Querying all messages from selected conversation and 
-    setting up variables for later executing the function that
+  /* Query all messages from selected conversation and 
+    set up variables for later executing the function that
     triggers the subscription to receive real-time updates */
   const [allMessagesFromThisConversation, setAllMessagesFromThisConversation] =
     useState<Message[]>([]);
@@ -50,15 +50,15 @@ const Chat: FC<ChatProps> = () => {
     }
   );
   if (errorLoadingMessages) return null;
-  /*  const allMessagesFromThisConversation = getAllMessagesData?.getAllMessages; */
 
   /* Trigger the subscription to new messages on the selected conversation
     (everytime selectedConversationId changes) */
-
   useEffect(() => {
     selectedConversationId && subscribeToNewMessages(selectedConversationId);
   }, [selectedConversationId]);
 
+  /* Replace optimistically rendered messages with "real" messages after 
+  receiving a success response from the useQuery hook */
   useEffect(() => {
     getAllMessagesData?.getAllMessages &&
       setAllMessagesFromThisConversation(getAllMessagesData.getAllMessages);
@@ -123,12 +123,8 @@ const Chat: FC<ChatProps> = () => {
                 allMessagesFromThisConversation={
                   allMessagesFromThisConversation
                 }
-                subscribeToNewMessages={subscribeToNewMessages}
               />
               <MessageInputField
-                allMessagesFromThisConversation={
-                  allMessagesFromThisConversation
-                }
                 setAllMessagesFromThisConversation={
                   setAllMessagesFromThisConversation
                 }
