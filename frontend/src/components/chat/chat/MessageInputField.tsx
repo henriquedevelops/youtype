@@ -43,9 +43,14 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
     try {
       if (!currentSession?.user?.name) return new Error("Session expired.");
 
+      const copyNewMessageBody = newMessageBody;
+      setNewMessageBody("");
+      console.log("111", copyNewMessageBody);
+      console.log("222", newMessageBody);
+
       const optimisticMessage: Message = {
         id: nanoid(), // Generate a temporary ID
-        body: newMessageBody,
+        body: copyNewMessageBody,
         sender: {
           id: currentSession.user.id,
           username: currentSession.user.name,
@@ -63,7 +68,7 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
       or removed depending on if the mutation was succesful or not */
       await triggerCreateMessageMutation({
         variables: {
-          messageBody: newMessageBody,
+          messageBody: copyNewMessageBody,
           selectedConversationId,
           senderId: currentSession.user.id,
         },

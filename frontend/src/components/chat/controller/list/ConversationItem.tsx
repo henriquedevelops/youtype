@@ -76,7 +76,7 @@ const ConversationItem: FC<ConversationItemProps> = ({ conversation }) => {
     >
       <Flex position="absolute" left="-6px">
         {userSawLatestMessage ? null : (
-          <GoPrimitiveDot fontSize={18} color="red" />
+          <GoPrimitiveDot fontSize={18} color="brand.100" />
         )}
       </Flex>
       <Avatar />

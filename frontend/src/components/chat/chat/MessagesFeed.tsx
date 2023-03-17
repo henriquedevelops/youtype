@@ -8,9 +8,6 @@ import { MessageItem } from "./MessageItem";
 export const MessagesFeed: FC<MessagesFeedProps> = ({
   allMessagesFromThisConversation,
 }) => {
-  const selectedConversationId = useContext(
-    SelectedConversationContext
-  ) as string;
   const { data: currentSession } = useSession();
 
   return (

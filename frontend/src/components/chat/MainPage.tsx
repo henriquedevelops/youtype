@@ -11,17 +11,10 @@ is rendered on the screen
 */
 
 const MainPage: FC = () => {
-  /* Verifying if there is a selected conversation */
-  const selectedConversationId = useRouter().query.selectedConversationId as
-    | string
-    | undefined;
-
   return (
     <Flex height="100vh">
-      <SelectedConversationContext.Provider value={selectedConversationId}>
-        <ConversationsController />
-        <Chat />
-      </SelectedConversationContext.Provider>
+      <ConversationsController />
+      <Chat />
     </Flex>
   );
 };

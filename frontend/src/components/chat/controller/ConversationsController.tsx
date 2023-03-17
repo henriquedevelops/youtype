@@ -7,6 +7,7 @@ import {
 import { SelectedConversationContext } from "@/src/util/util";
 import { useQuery } from "@apollo/client";
 import { Box, Skeleton } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import {
   FunctionComponent as FC,
   useContext,
@@ -26,7 +27,7 @@ authenticated user (from which he can choose the current conversation).
 */
 
 const ConversationsController: FC<ConversationsControllerProps> = () => {
-  const selectedConversationId = useContext(SelectedConversationContext);
+  const selectedConversationId = useRouter().query.selectedConversationId;
   const [allConversations, setAllConversations] = useState<
     PopulatedConversation[]
   >([]);

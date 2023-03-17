@@ -17,9 +17,8 @@ import toast from "react-hot-toast";
 export const Header: FC<HeaderProps> = () => {
   const loggedUserId = useSession().data?.user.id;
   const nextRouter = useRouter();
-  const selectedConversationId = useContext(
-    SelectedConversationContext
-  ) as string;
+  const selectedConversationId = nextRouter.query
+    .selectedConversationId as string;
   const {
     data: GetConversationByIdData,
     loading: isLoadingGetConversationById,

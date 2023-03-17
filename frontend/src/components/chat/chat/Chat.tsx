@@ -9,6 +9,7 @@ import { ChatProps } from "@/src/typescriptTypes/props";
 import { SelectedConversationContext } from "@/src/util/util";
 import { useQuery } from "@apollo/client";
 import { Flex, Skeleton } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import {
   FunctionComponent as FC,
   useContext,
@@ -28,11 +29,12 @@ and the input field where the user types a new message
 
 const Chat: FC<ChatProps> = () => {
   /* Query all messages from selected conversation and 
-    set up variables for later executing the function that
-    triggers the subscription to receive real-time updates */
+  set up variables for later executing the function that
+  triggers the subscription to receive real-time updates */
   const [allMessagesFromThisConversation, setAllMessagesFromThisConversation] =
     useState<Message[]>([]);
-  const selectedConversationId = useContext(SelectedConversationContext);
+  const selectedConversationId = useRouter().query
+    .selectedConversationId as string;
   const {
     data: getAllMessagesData,
     loading: isLoadingMessages,
@@ -51,10 +53,11 @@ const Chat: FC<ChatProps> = () => {
   );
   if (errorLoadingMessages) return null;
 
-  /* Trigger the subscription to new messages on the selected conversation
-    (everytime selectedConversationId changes) */
+  /* Subscribe/unsubscribe to messages everytime selected conversation changes */
   useEffect(() => {
-    selectedConversationId && subscribeToNewMessages(selectedConversationId);
+    const unsubscribe = subscribeToNewMessages(selectedConversationId);
+
+    return () => unsubscribe();
   }, [selectedConversationId]);
 
   /* Replace optimistically rendered messages with "real" messages after 
@@ -74,7 +77,7 @@ const Chat: FC<ChatProps> = () => {
 
       /* "allMessagesFromThisCOnversation" will be updated with the 
       value returned from this function (which includes the new message 
-      when there is one) */
+        when there is one) */
       updateQuery: (
         previousMessages,
         { subscriptionData: newMessage }: MessageSubscriptionData
