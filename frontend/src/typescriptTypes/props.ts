@@ -31,7 +31,7 @@ export interface ChatProps {}
 export interface HeaderProps {}
 
 export interface ConversationItemProps {
-  conversation: PopulatedConversation;
+  singleConversation: PopulatedConversation;
 }
 
 export interface ListAllConversationsProps {

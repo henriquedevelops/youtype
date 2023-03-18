@@ -83,3 +83,7 @@ export interface GetConversationByIdData {
 export interface SelectedConversationContextType {
   selectedConversationId: string;
 }
+
+export interface ConversationUpdateData {
+  updatedConversation: PopulatedConversation;
+}

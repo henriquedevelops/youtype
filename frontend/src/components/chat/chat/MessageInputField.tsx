@@ -45,8 +45,6 @@ export const MessageInputField: FC<MessageInputFieldProps> = ({
 
       const copyNewMessageBody = newMessageBody;
       setNewMessageBody("");
-      console.log("111", copyNewMessageBody);
-      console.log("222", newMessageBody);
 
       const optimisticMessage: Message = {
         id: nanoid(), // Generate a temporary ID

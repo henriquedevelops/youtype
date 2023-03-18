@@ -24,3 +24,7 @@ export type PopulatedConversation = Prisma.ConversationGetPayload<{
 export interface ConversationCreationSubscriptionPayload {
   conversationCreation: PopulatedConversation;
 }
+
+export interface ConversationUpdateData {
+  updatedConversation: PopulatedConversation;
+}

@@ -20,7 +20,7 @@ const ListAllConversations: FC<ListAllConversationsProps> = ({
         </Flex>
       ) : (
         allConversations.map((item) => (
-          <ConversationItem key={item.id} conversation={item} />
+          <ConversationItem key={item.id} singleConversation={item} />
         ))
       )}
     </>

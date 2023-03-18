@@ -21,6 +21,10 @@ export default gql`
     hasSeenLatestMessage: Boolean
   }
 
+  type ConversationUpdateData {
+    updatedConversation: Conversation
+  }
+
   type Query {
     getAllConversations: [Conversation]
     getConversationById(selectedConversationId: String): Conversation
@@ -33,5 +37,6 @@ export default gql`
 
   type Subscription {
     conversationCreation: Conversation
+    conversationUpdate: ConversationUpdateData
   }
 `;

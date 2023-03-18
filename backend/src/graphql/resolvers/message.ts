@@ -129,7 +129,7 @@ export default {
         /* Update message feeds of the participants in
          real-time */
         pubsub.publish("MESSAGE_CREATION", { messageCreation: newMessage });
-        // pubsub.publish("CONVERSATION_UPDATED", updatedConversation);
+        pubsub.publish("CONVERSATION_UPDATE", updatedConversation);
       } catch (error) {
         throw new GraphQLError("Error creating message");
       }

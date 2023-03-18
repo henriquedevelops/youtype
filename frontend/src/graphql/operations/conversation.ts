@@ -58,5 +58,15 @@ export default {
         { ${populatedConversationFields}}
      }
     `,
+
+    conversationUpdate: gql`
+    subscription {
+      conversationUpdate{
+        updatedConversation {
+          ${populatedConversationFields}
+        }
+      }
+    }
+    `,
   },
 };

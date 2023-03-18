@@ -3,9 +3,11 @@ import { GraphQLError } from "graphql";
 import { withFilter } from "graphql-subscriptions";
 import {
   ConversationCreationSubscriptionPayload,
+  ConversationUpdateData,
   PopulatedConversation,
 } from "../../typescriptTypes/conversation";
 import { GraphQLContext } from "../../typescriptTypes/server";
+import { verifyConversationParticipant } from "../../util/util";
 
 export default {
   Query: {
@@ -194,6 +196,34 @@ export default {
           );
 
           return currentUserIsParticipant;
+        }
+      ),
+    },
+    conversationUpdate: {
+      /* When there is a new event published on the "CONVERSATION_UPDATE" 
+      channel this subscription filters the participants of the conversation
+      which the event was published and sends the update to them so that it
+      can be rendered in real-time */
+      subscribe: withFilter(
+        (_: any, __: any, { pubsub }: GraphQLContext) => {
+          return pubsub.asyncIterator(["CONVERSATION_UPDATE"]);
+        },
+
+        (
+          { updatedConversation }: ConversationUpdateData,
+          _,
+          { currentSession }: GraphQLContext
+        ) => {
+          if (!currentSession?.user) {
+            throw new GraphQLError("Not authorized");
+          }
+
+          /* const currentUserIsParticipant = verifyConversationParticipant(
+            updatedConversation.participants,
+            currentSession.user.id
+          ); */
+
+          return true;
         }
       ),
     },
