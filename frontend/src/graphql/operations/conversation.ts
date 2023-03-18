@@ -62,9 +62,7 @@ export default {
     conversationUpdate: gql`
     subscription {
       conversationUpdate{
-        updatedConversation {
           ${populatedConversationFields}
-        }
       }
     }
     `,

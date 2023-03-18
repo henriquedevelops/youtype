@@ -52,7 +52,7 @@ export default {
           },
           include: populatedMessage,
           orderBy: {
-            createdAt: "desc",
+            updatedAt: "desc",
           },
         });
 
@@ -74,6 +74,8 @@ export default {
       { currentSession, prisma, pubsub }: GraphQLContext
     ): Promise<boolean> => {
       if (!currentSession?.user.id) throw new GraphQLError("Not logged in");
+
+      const now = new Date();
 
       /* Checking if senderId matches currently authenticated
       user id. (security step) */
@@ -98,6 +100,7 @@ export default {
           },
           data: {
             latestMessageId: newMessage.id,
+            updatedAt: now,
           },
           include: populatedConversation,
         });
@@ -129,7 +132,9 @@ export default {
         /* Update message feeds of the participants in
          real-time */
         pubsub.publish("MESSAGE_CREATION", { messageCreation: newMessage });
-        pubsub.publish("CONVERSATION_UPDATE", updatedConversation);
+        pubsub.publish("CONVERSATION_UPDATE", {
+          conversationUpdate: updatedConversation,
+        });
       } catch (error) {
         throw new GraphQLError("Error creating message");
       }

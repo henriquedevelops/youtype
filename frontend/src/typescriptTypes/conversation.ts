@@ -64,8 +64,6 @@ export interface getAllConversationData {
   getAllConversations: Array<PopulatedConversation>;
 }
 
-/* Structure of the data that is received as argument by
-subscribeToMore function in the conversation creation subscription  */
 export interface newValueUpdateConversationQuery {
   subscriptionData: {
     data: { conversationCreation: PopulatedConversation };
@@ -85,5 +83,7 @@ export interface SelectedConversationContextType {
 }
 
 export interface ConversationUpdateData {
-  updatedConversation: PopulatedConversation;
+  conversationUpdate: {
+    updatedConversation: PopulatedConversation;
+  };
 }

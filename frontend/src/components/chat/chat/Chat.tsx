@@ -62,7 +62,7 @@ const Chat: FC<ChatProps> = () => {
 
   return (
     <>
-      {isLoadingMessages ? (
+      {selectedConversationId && isLoadingMessages ? (
         <Skeleton
           variant="rect"
           width="100%"
@@ -80,7 +80,7 @@ const Chat: FC<ChatProps> = () => {
           width="100%"
           direction="column"
         >
-          {selectedConversationId ? (
+          {selectedConversationId && (
             <Flex
               direction="column"
               justify="space-between"
@@ -100,8 +100,6 @@ const Chat: FC<ChatProps> = () => {
                 }
               />
             </Flex>
-          ) : (
-            <Flex>Nextype Messenger</Flex>
           )}
         </Flex>
       )}

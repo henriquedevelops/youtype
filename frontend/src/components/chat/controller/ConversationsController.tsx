@@ -7,6 +7,7 @@ import {
 import { SelectedConversationContext } from "@/src/util/util";
 import { useQuery } from "@apollo/client";
 import { Box, Skeleton } from "@chakra-ui/react";
+import { getTime } from "date-fns";
 import { useRouter } from "next/router";
 import {
   FunctionComponent as FC,
@@ -16,7 +17,7 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 import ButtonStartConversation from "./ButtonStartConversation";
-import ListAllConversation from "./list/ListAllConversation";
+import ConversationItem from "./ConversationItem";
 
 interface ConversationsControllerProps {}
 
@@ -52,7 +53,8 @@ const ConversationsController: FC<ConversationsControllerProps> = () => {
     subscribeToNewConversations();
   }, []);
 
-  /* ?? */
+  /* Update the state of "allConversation" variable when the there is a 
+  new conversation */
   useEffect(() => {
     getAllConversationsData?.getAllConversations &&
       setAllConversations(getAllConversationsData.getAllConversations);
@@ -82,6 +84,10 @@ const ConversationsController: FC<ConversationsControllerProps> = () => {
     });
   };
 
+  const allConversationSorted = [...allConversations].sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  );
+
   return (
     <>
       {isLoadingConversations ? (
@@ -105,7 +111,9 @@ const ConversationsController: FC<ConversationsControllerProps> = () => {
           px={3}
         >
           <ButtonStartConversation />
-          <ListAllConversation allConversations={allConversations} />
+          {allConversationSorted.map((item) => (
+            <ConversationItem key={item.id} singleConversation={item} />
+          ))}
         </Box>
       )}
     </>

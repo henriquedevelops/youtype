@@ -32,43 +32,48 @@ const ConversationItem: FC<ConversationItemProps> = ({
     { markConversationAsRead: boolean },
     { selectedConversationId: string }
   >(conversationsOperations.Mutations.markConversationAsRead);
+
   const [thisConversation, setThisConversation] = useState(singleConversation);
   const [userSawLatestMessage, setUserSawLatestMessage] = useState<boolean>(
     thisConversation.participants.find(
       (participant) => participant.user.id === currentSession?.user.id
     )?.hasSeenLatestMessage ?? false
   );
-
-  const { data: subscriptionData } = useSubscription<ConversationUpdateData>(
+  const { data: subscriptionData } = useSubscription<any, any>(
     conversationsOperations.Subscriptions.conversationUpdate
   );
 
   useEffect(() => {
     console.log(subscriptionData);
 
-    subscriptionData &&
-      setThisConversation(subscriptionData.updatedConversation);
+    subscriptionData?.conversationUpdate &&
+      subscriptionData.conversationUpdate.id === thisConversation.id &&
+      setThisConversation(subscriptionData.conversationUpdate);
+
+    if (thisConversation.id === selectedConversationId) {
+      setUserSawLatestMessage(true);
+    } else if (
+      !userSawLatestMessage &&
+      subscriptionData?.conversationUpdate?.latestMessage?.id !==
+        thisConversation.latestMessage?.id
+    ) {
+      setUserSawLatestMessage(true);
+    }
   }, [subscriptionData]);
 
-  /* Function clicks when the user clicks in one of the conversations
+  console.log(singleConversation.updatedAt);
+
+  /* Function that executes when the user clicks in one of the conversations
    from the list */
   const handleSelectConversation = async (selectedConversationId: string) => {
     /* Push the selected conversation id to the router query params */
     nextRouter.push({ query: { selectedConversationId } });
 
-    /* Optimistically render the UI */
-    setUserSawLatestMessage(true);
-
     try {
       await triggerMarkConversationMutation({
         variables: { selectedConversationId },
-        optimisticResponse: {
-          markConversationAsRead: true,
-        },
-        onError: () => {
-          setUserSawLatestMessage(false);
-        },
       });
+      setUserSawLatestMessage(true);
     } catch (error: any) {
       toast.error(error?.message);
     }
@@ -91,11 +96,6 @@ const ConversationItem: FC<ConversationItemProps> = ({
       position="relative"
       onClick={() => handleSelectConversation(thisConversation.id)}
     >
-      <Flex position="absolute" left="-6px">
-        {userSawLatestMessage ? null : (
-          <GoPrimitiveDot fontSize={18} color="brand.100" />
-        )}
-      </Flex>
       <Avatar />
       <Flex justify="space-between" width="80%" height="100%">
         <Flex direction="column" width="70%" height="100%">

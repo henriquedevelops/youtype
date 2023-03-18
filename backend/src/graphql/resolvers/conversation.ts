@@ -210,20 +210,21 @@ export default {
         },
 
         (
-          { updatedConversation }: ConversationUpdateData,
+          { conversationUpdate }: ConversationUpdateData,
           _,
           { currentSession }: GraphQLContext
         ) => {
           if (!currentSession?.user) {
             throw new GraphQLError("Not authorized");
           }
+          console.log(conversationUpdate);
 
-          /* const currentUserIsParticipant = verifyConversationParticipant(
-            updatedConversation.participants,
+          const currentUserIsParticipant = verifyConversationParticipant(
+            conversationUpdate.participants,
             currentSession.user.id
-          ); */
+          );
 
-          return true;
+          return currentUserIsParticipant;
         }
       ),
     },

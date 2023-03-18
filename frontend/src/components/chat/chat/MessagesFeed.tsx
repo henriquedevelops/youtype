@@ -31,7 +31,7 @@ export const MessagesFeed: FC<MessagesFeedProps> = ({
         selectedConversationId,
       },
 
-      /* "allMessagesFromThisCOnversation" will be updated with the 
+      /* "allMessages" will be updated with the 
       value returned from this function (which includes the new message 
         when there is one) */
       updateQuery: (

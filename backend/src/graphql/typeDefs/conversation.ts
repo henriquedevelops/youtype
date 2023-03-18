@@ -37,6 +37,6 @@ export default gql`
 
   type Subscription {
     conversationCreation: Conversation
-    conversationUpdate: ConversationUpdateData
+    conversationUpdate: Conversation
   }
 `;

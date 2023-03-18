@@ -26,5 +26,5 @@ export interface ConversationCreationSubscriptionPayload {
 }
 
 export interface ConversationUpdateData {
-  updatedConversation: PopulatedConversation;
+  conversationUpdate: PopulatedConversation;
 }
