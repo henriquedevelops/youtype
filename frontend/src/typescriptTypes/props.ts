@@ -1,7 +1,8 @@
+import { OperationVariables, SubscribeToMoreOptions } from "@apollo/client";
 import { Session } from "next-auth";
 import { Dispatch, SetStateAction } from "react";
 import { getAllConversationData, PopulatedConversation } from "./conversation";
-import { Message } from "./message";
+import { GetAllMessagesArgument, getAllMessagesData, Message } from "./message";
 
 export interface HomeProps {
   currentSession: Session | null;
@@ -13,6 +14,16 @@ export interface MessageInputFieldProps {
 
 export interface MessagesFeedProps {
   allMessagesFromThisConversation: Message[] | undefined;
+  subscribeToMoreMessages: <
+    TSubscriptionData = getAllMessagesData,
+    TSubscriptionVariables extends OperationVariables = GetAllMessagesArgument
+  >(
+    options: SubscribeToMoreOptions<
+      getAllMessagesData,
+      TSubscriptionVariables,
+      TSubscriptionData
+    >
+  ) => () => void;
 }
 
 export interface ChatProps {}

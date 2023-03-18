@@ -53,46 +53,12 @@ const Chat: FC<ChatProps> = () => {
   );
   if (errorLoadingMessages) return null;
 
-  /* Subscribe/unsubscribe to messages everytime selected conversation changes */
-  useEffect(() => {
-    const unsubscribe = subscribeToNewMessages(selectedConversationId);
-
-    return () => unsubscribe();
-  }, [selectedConversationId]);
-
   /* Replace optimistically rendered messages with "real" messages after 
   receiving a success response from the useQuery hook */
   useEffect(() => {
     getAllMessagesData?.getAllMessages &&
       setAllMessagesFromThisConversation(getAllMessagesData.getAllMessages);
   }, [getAllMessagesData?.getAllMessages]);
-
-  /* Function that triggers the subscription to new messages */
-  const subscribeToNewMessages = (selectedConversationId: string) => {
-    return subscribeToMore({
-      document: MessageOperations.Subscriptions.messageCreation,
-      variables: {
-        selectedConversationId,
-      },
-
-      /* "allMessagesFromThisCOnversation" will be updated with the 
-      value returned from this function (which includes the new message 
-        when there is one) */
-      updateQuery: (
-        previousMessages,
-        { subscriptionData: newMessage }: MessageSubscriptionData
-      ) => {
-        if (!newMessage) return previousMessages;
-
-        return Object.assign({}, previousMessages, {
-          getAllMessages: [
-            newMessage.data.messageCreation,
-            ...previousMessages.getAllMessages,
-          ],
-        });
-      },
-    });
-  };
 
   return (
     <>
@@ -126,6 +92,7 @@ const Chat: FC<ChatProps> = () => {
                 allMessagesFromThisConversation={
                   allMessagesFromThisConversation
                 }
+                subscribeToMoreMessages={subscribeToMore}
               />
               <MessageInputField
                 setAllMessagesFromThisConversation={
